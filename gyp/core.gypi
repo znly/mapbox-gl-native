@@ -38,7 +38,8 @@
           '<@(opengl_cflags)',
           '<@(variant_cflags)',
           '<@(rapidjson_cflags)',
-          '-fPIC'
+          '-Wno-error=unused-variable',
+          '-fPIC',
         ],
         'ldflags': [
           '<@(opengl_ldflags)',

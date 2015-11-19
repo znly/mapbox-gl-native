@@ -8,18 +8,17 @@
       ['OS=="mac"', {
         'xcode_settings': {
           'CLANG_CXX_LIBRARY': 'libc++',
+          'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
           'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
+          'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
+          'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES',
           'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
           'GCC_ENABLE_CPP_RTTI': 'YES',
           'OTHER_CPLUSPLUSFLAGS': [
-            '-std=c++14',
-            '-Werror',
             '-Wall',
             '-Wextra',
             '-Wshadow',
             '-Wno-variadic-macros',
-            '-frtti',
-            '-fexceptions',
             '${CFLAGS}',
           ],
           'GCC_WARN_PEDANTIC': 'YES',
@@ -34,9 +33,9 @@
           '-Wextra',
           '-Wshadow',
           '-Wno-variadic-macros',
-          '-Wno-error=unused-parameter',
-          '-frtti',
+          '-fvisibility=hidden',
           '-fexceptions',
+          '-frtti',
           '${CFLAGS}',
         ],
       }],
@@ -91,7 +90,6 @@
         'xcode_settings': {
           'GCC_OPTIMIZATION_LEVEL': '0',
           'GCC_GENERATE_DEBUGGING_SYMBOLS': 'YES',
-          'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES',
           'DEAD_CODE_STRIPPING': 'NO',
           'OTHER_CPLUSPLUSFLAGS': [ '-fno-omit-frame-pointer','-fwrapv', '-fstack-protector-all', '-fno-common']
         }
@@ -102,7 +100,6 @@
         'xcode_settings': {
           'GCC_OPTIMIZATION_LEVEL': '3',
           'GCC_GENERATE_DEBUGGING_SYMBOLS': 'YES',
-          'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES',
           'DEAD_CODE_STRIPPING': 'NO',
         }
       },
