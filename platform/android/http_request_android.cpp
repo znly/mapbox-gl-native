@@ -189,7 +189,7 @@ void HTTPAndroidRequest::finish() {
     delete this;
 }
 
-void HTTPAndroidRequest::onResponse(int code, std::string message, std::string etag, std::string modified, std::string cacheControl, std::string expires, std::string body) {
+void HTTPAndroidRequest::onResponse(int code, std::string, std::string etag, std::string modified, std::string cacheControl, std::string expires, std::string body) {
     response = std::make_unique<Response>();
     using Error = Response::Error;
 
