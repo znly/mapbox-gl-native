@@ -66,6 +66,10 @@
             android:name="com.mapbox.AccessToken"
             android:value="" />
 
+
+        <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService"
+                 android:label="@string/service_telemetry"/>
+
     </application>
 
 </manifest>

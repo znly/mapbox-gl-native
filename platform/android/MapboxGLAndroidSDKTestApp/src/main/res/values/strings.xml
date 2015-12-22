@@ -20,6 +20,8 @@
     <string name="activity_animate_coordinate_change">Animate Coordinate Change</string>
     <string name="activity_custom_layer">Custom Layer</string>
 
+    <string name="service_telemetry">Telemetry Service</string>
+
     <string name="navdrawer_menu_title_mainactivity_controls">Main Activity Controls</string>
     <string name="navdrawer_menu_title_mainactivity_styles">Main Activity Styles</string>
     <string name="navdrawer_menu_title_individual_tests">Individual Tests</string>
