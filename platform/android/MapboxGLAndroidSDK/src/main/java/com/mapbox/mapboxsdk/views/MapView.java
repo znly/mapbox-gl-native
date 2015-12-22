@@ -78,6 +78,7 @@ import com.mapbox.mapboxsdk.geometry.CoordinateBounds;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngZoom;
 import com.mapbox.mapboxsdk.layers.CustomLayer;
+import com.mapbox.mapboxsdk.telemetry.TelemetryService;
 import com.mapbox.mapboxsdk.utils.ApiAccess;
 import com.mapbox.mapboxsdk.utils.MathUtils;
 import java.lang.annotation.Retention;
@@ -1027,6 +1028,11 @@ public final class MapView extends FrameLayout {
         mUserLocationView.resume();
         mNativeMapView.resume();
         mNativeMapView.update();
+
+        Log.i(TAG, "MapView.onResume() - Before Service");
+        Intent telemetryService = new Intent(getContext(), TelemetryService.class);
+        getContext().startService(telemetryService);
+        Log.i(TAG, "MapView.onResume() - After Service");
     }
 
     /**

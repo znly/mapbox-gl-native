@@ -8,6 +8,8 @@
     <string name="infoWindowDescription">Description</string>
     <string name="infoWindowAddress">Address</string>
 
+    <string name="service_telemetry">Telemetry Service</string>
+
     <!-- these are public -->
     <string name="style_mapbox_streets">mapbox://styles/mapbox/streets-v8</string>
     <string name="style_emerald">mapbox://styles/mapbox/emerald-v8</string>
