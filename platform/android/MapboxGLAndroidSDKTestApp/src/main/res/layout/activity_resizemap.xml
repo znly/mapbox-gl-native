@@ -5,21 +5,28 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <RelativeLayout
+        android:id="@+id/customAppBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:layout_height="200dp"
+        android:background="#FFCC00">
 
-    <com.mapbox.mapboxsdk.views.MapView
-        android:id="@+id/resizeMapView"
+    </RelativeLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        app:center_latitude="59.32360"
-        app:center_longitude="18.07197"
-        app:style_url="@string/style_mapbox_streets"
-        app:zoom="12" />
+        android:layout_below="@+id/customAppBarLayout">
+
+        <com.mapbox.mapboxsdk.views.MapView
+            android:id="@+id/resizeMapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:center_latitude="59.32360"
+            app:center_longitude="18.07197"
+            app:style_url="@string/style_mapbox_streets"
+            app:zoom="12" />
+
+    </FrameLayout>
 
 </RelativeLayout>
