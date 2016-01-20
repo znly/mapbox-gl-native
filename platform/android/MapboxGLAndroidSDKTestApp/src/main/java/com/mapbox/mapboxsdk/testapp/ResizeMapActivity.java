@@ -3,13 +3,17 @@ package com.mapbox.mapboxsdk.testapp;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import com.mapbox.mapboxsdk.utils.ApiAccess;
 import com.mapbox.mapboxsdk.views.MapView;
 
 public class ResizeMapActivity extends AppCompatActivity {
 
     private MapView mMapView;
+
+    private RelativeLayout customAppBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,29 @@ public class ResizeMapActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.resizeMapView);
         mMapView.setAccessToken(ApiAccess.getToken(this));
         mMapView.onCreate(savedInstanceState);
+
+        customAppBarLayout = (RelativeLayout) findViewById(R.id.customAppBarLayout);
+
+        Button backButton = (Button) findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        Button changeLayoutButton = (Button) findViewById(R.id.changeLayoutButton);
+        changeLayoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (customAppBarLayout.getVisibility() == View.VISIBLE) {
+                    customAppBarLayout.setVisibility(View.GONE);
+                } else {
+                    customAppBarLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -67,18 +94,5 @@ public class ResizeMapActivity extends AppCompatActivity {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

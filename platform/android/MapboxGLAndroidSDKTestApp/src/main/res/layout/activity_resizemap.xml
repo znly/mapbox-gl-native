@@ -27,6 +27,20 @@
             app:style_url="@string/style_mapbox_streets"
             app:zoom="12" />
 
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_gravity="bottom|left"/>
+
+        <Button
+            android:id="@+id/changeLayoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Layout"
+            android:layout_gravity="bottom|right"/>
+
     </FrameLayout>
 
 </RelativeLayout>
