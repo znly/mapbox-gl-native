@@ -167,6 +167,12 @@
                 android:icon="@drawable/ic_directions"
                 android:title="@string/activity_geocoder" />
 
+            <item
+                android:id="@+id/action_resize_map"
+                android:checkable="false"
+                android:icon="@drawable/ic_vertical_align_center_24dp"
+                android:title="@string/activity_resize_map"/>
+
         </menu>
     </item>
 

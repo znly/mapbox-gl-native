@@ -424,6 +424,10 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(), GeocoderActivity.class));
                                 return true;
 
+                            case R.id.action_resize_map:
+                                startActivity(new Intent(getApplicationContext(), ResizeMapActivity.class));
+                                return true;
+
                             default:
                                 return changeMapStyle(menuItem.getItemId());
                         }

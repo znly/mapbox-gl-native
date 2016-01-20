@@ -73,6 +73,9 @@
             android:name=".DoubleMapActivity"
             android:label="@string/activity_double_map" />
 
+        <activity
+            android:name=".ResizeMapActivity"
+            android:label="@string/activity_resize_map"/>
         <meta-data
             android:name="com.mapbox.AccessToken"
             android:value="" />
