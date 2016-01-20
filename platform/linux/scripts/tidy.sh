@@ -10,8 +10,5 @@ BUILDTYPE=${BUILDTYPE:-Release}
 
 export CLANG_TIDY=clang-tidy-3.8
 
-mapbox_time "config" \
 make config
-
-mapbox_time "tidy" \
 make tidy
