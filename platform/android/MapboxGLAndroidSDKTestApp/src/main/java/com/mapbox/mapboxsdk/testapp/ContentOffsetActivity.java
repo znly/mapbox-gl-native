@@ -5,6 +5,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.constants.Style;
@@ -36,13 +38,17 @@ public class ContentOffsetActivity extends AppCompatActivity {
         mMapView.setAccessToken(ApiAccess.getToken(this));
         mMapView.setStyle(Style.MAPBOX_STREETS);
 
+        LatLng nashville = new LatLng(36.15534, -86.77620);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(36.15534, -86.77620))
+                .target(nashville)
                 .zoom(12)
                 .build();
 
         mMapView.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        mMapView.setContentPadding(0, 250, 0, 0);
+
+        mMapView.addMarker(new MarkerOptions().position(nashville).title("Nashville"));
+
+        mMapView.setContentPadding(0, 1000, 0, 0);
         mMapView.onCreate(savedInstanceState);
     }
 
