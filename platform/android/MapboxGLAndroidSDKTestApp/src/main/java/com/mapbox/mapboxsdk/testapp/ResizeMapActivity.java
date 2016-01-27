@@ -13,6 +13,7 @@ public class ResizeMapActivity extends AppCompatActivity {
 
     private MapView mMapView;
 
+    private RelativeLayout parentLayout;
     private RelativeLayout customAppBarLayout;
 
     @Override
@@ -30,6 +31,7 @@ public class ResizeMapActivity extends AppCompatActivity {
         mMapView.setAccessToken(ApiAccess.getToken(this));
         mMapView.onCreate(savedInstanceState);
 
+        parentLayout = (RelativeLayout) findViewById(R.id.parentLayout);
         customAppBarLayout = (RelativeLayout) findViewById(R.id.customAppBarLayout);
 
         Button backButton = (Button) findViewById(R.id.backButton);
@@ -46,8 +48,10 @@ public class ResizeMapActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (customAppBarLayout.getVisibility() == View.VISIBLE) {
                     customAppBarLayout.setVisibility(View.GONE);
+                    parentLayout.invalidate();
                 } else {
                     customAppBarLayout.setVisibility(View.VISIBLE);
+                    parentLayout.invalidate();
                 }
             }
         });
