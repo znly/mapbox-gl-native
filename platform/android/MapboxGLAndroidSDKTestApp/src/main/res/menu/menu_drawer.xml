@@ -167,6 +167,12 @@
                 android:icon="@drawable/ic_directions"
                 android:title="@string/activity_geocoder" />
 
+            <item
+                android:id="@+id/action_content_offset"
+                android:checkable="false"
+                android:icon="@drawable/ic_aspect_ratio_24dp"
+                android:title="@string/activity_content_offset" />
+
         </menu>
     </item>
 

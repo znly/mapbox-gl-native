@@ -72,6 +72,8 @@
         <activity
             android:name=".DoubleMapActivity"
             android:label="@string/activity_double_map" />
+        <activity android:name=".ContentOffsetActivity"
+                  android:label="@string/activity_content_offset"/>
 
         <meta-data
             android:name="com.mapbox.AccessToken"

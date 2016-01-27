@@ -22,6 +22,7 @@
     <string name="activity_directions">Directions Activity</string>
     <string name="activity_geocoder">Geocoder Activity</string>
     <string name="activity_double_map">Double Map Activity</string>
+    <string name="activity_content_offset">Content Offset</string>
 
     <string name="navdrawer_menu_title_mainactivity_controls">Main Activity Controls</string>
     <string name="navdrawer_menu_title_mainactivity_styles">Main Activity Styles</string>

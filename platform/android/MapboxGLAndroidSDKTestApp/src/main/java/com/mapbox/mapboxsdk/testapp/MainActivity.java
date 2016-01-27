@@ -424,6 +424,10 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(), GeocoderActivity.class));
                                 return true;
 
+                            case R.id.action_content_offset:
+                                startActivity(new Intent(getApplicationContext(), ContentOffsetActivity.class));
+                                return true;
+
                             default:
                                 return changeMapStyle(menuItem.getItemId());
                         }
