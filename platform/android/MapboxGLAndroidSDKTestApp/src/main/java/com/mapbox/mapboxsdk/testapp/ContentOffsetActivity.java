@@ -5,7 +5,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.constants.Style;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.utils.ApiAccess;
 import com.mapbox.mapboxsdk.views.MapView;
 
@@ -32,6 +35,14 @@ public class ContentOffsetActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.contentOffsetMapView);
         mMapView.setAccessToken(ApiAccess.getToken(this));
         mMapView.setStyle(Style.MAPBOX_STREETS);
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(36.15534, -86.77620))
+                .zoom(12)
+                .build();
+
+        mMapView.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMapView.setContentPadding(0, 250, 0, 0);
         mMapView.onCreate(savedInstanceState);
     }
 
