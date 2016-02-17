@@ -224,6 +224,8 @@ void MapContext::renderStill(const TransformState& state, const FrameData& frame
 }
 
 bool MapContext::renderSync(const TransformState& state, const FrameData& frame) {
+    MBGL_BEGIN_SCOPE
+
     assert(util::ThreadContext::currentlyOn(util::ThreadType::Map));
 
     // Style was not loaded yet.
@@ -255,6 +257,8 @@ bool MapContext::renderSync(const TransformState& state, const FrameData& frame)
         updateFlags |= Update::Repaint;
         asyncUpdate.send();
     }
+
+    MBGL_END_SCOPE
 
     return isLoaded();
 }

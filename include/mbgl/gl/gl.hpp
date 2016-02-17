@@ -38,6 +38,8 @@
 namespace mbgl {
 namespace gl {
 
+extern bool scope;
+
 #ifdef GL_TRACK
     typedef void (*GLDEBUGPROC)(GLenum source,
                                 GLenum type,
@@ -71,6 +73,14 @@ void checkError(const char *cmd, const char *file, int line);
 #define MBGL_CHECK_ERROR(cmd) ([&]() { struct __MBGL_C_E { inline ~__MBGL_C_E() { ::mbgl::gl::checkError(#cmd, __FILE__, __LINE__); } } __MBGL_C_E; return cmd; }())
 #else
 #define MBGL_CHECK_ERROR(cmd) (cmd)
+#endif
+
+#if defined(DEBUG)
+#define MBGL_BEGIN_SCOPE { ::mbgl::gl::scope = true; }
+#define MBGL_END_SCOPE { ::mbgl::gl::scope = false; }
+#else
+#define MBGL_BEGIN_SCOPE
+#define MBGL_END_SCOPE
 #endif
 
 class ExtensionFunctionBase {

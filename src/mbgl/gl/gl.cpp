@@ -10,6 +10,10 @@
 namespace mbgl {
 namespace gl {
 
+// Guard to make sure that GL commands are being
+// executed inside a code block where GL is allowed.
+bool scope = false;
+
 std::vector<ExtensionFunctionBase*>& ExtensionFunctionBase::functions() {
     static std::vector<ExtensionFunctionBase*> functions;
     return functions;
@@ -18,6 +22,8 @@ std::vector<ExtensionFunctionBase*>& ExtensionFunctionBase::functions() {
 static std::once_flag initializeExtensionsOnce;
 
 void InitializeExtensions(glProc (*getProcAddress)(const char *)) {
+    MBGL_BEGIN_SCOPE
+
     std::call_once(initializeExtensionsOnce, [getProcAddress] {
         const char * extensionsPtr = reinterpret_cast<const char *>(
             MBGL_CHECK_ERROR(glGetString(GL_EXTENSIONS)));
@@ -38,9 +44,15 @@ void InitializeExtensions(glProc (*getProcAddress)(const char *)) {
             }
         }
     });
+
+    MBGL_END_SCOPE
 }
 
 void checkError(const char *cmd, const char *file, int line) {
+    if (!scope) {
+        throw ::mbgl::gl::Error(0, std::string(cmd) + ": not in scope - " + file + ":" + util::toString(line));
+    }
+
     const GLenum err = glGetError();
     if (err != GL_NO_ERROR) {
         const char *error = nullptr;
