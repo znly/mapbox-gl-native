@@ -2079,7 +2079,7 @@ public:
     if ((NSUInteger)data >= MGLAnnotationTagNotFound) {
         return nil;
     }
-    MGLAnnotationTag annotationTag = (NSUInteger)data;
+    MGLAnnotationTag annotationTag = (MGLAnnotationTag)(NSUInteger)data;
     id <MGLAnnotation> annotation = [self annotationWithTag:annotationTag];
     return annotation.toolTip;
 }
@@ -2345,7 +2345,7 @@ public:
         mbgl::PremultipliedImage image { w, h };
         MBGL_CHECK_ERROR(glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, image.data.get()));
         
-        const int stride = image.stride();
+        const size_t stride = image.stride();
         auto tmp = std::make_unique<uint8_t[]>(stride);
         uint8_t *rgba = image.data.get();
         for (int i = 0, j = h - 1; i < j; i++, j--) {

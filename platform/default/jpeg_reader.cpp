@@ -124,13 +124,17 @@ PremultipliedImage decodeJPEG(const uint8_t* data, size_t size) {
 
     size_t width = cinfo.output_width;
     size_t height = cinfo.output_height;
-    size_t components = cinfo.output_components;
-    size_t rowStride = components * width;
 
     PremultipliedImage image { width, height };
     uint8_t* dst = image.data.get();
 
-    JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, rowStride, 1);
+    size_t components = cinfo.output_components;
+    size_t rowStride = components * width;
+
+    if (rowStride > std::numeric_limits<JDIMENSION>::max())
+        throw std::runtime_error("JPEG Reader: image is too large");
+
+    JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, static_cast<JDIMENSION>(rowStride), 1);
 
     while (cinfo.output_scanline < cinfo.output_height) {
         jpeg_read_scanlines(&cinfo, buffer, 1);
