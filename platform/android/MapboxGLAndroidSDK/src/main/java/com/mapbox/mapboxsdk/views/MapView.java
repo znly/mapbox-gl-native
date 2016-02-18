@@ -2955,6 +2955,9 @@ public final class MapView extends FrameLayout {
         // Must handle window resizing here.
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            Log.i(TAG, "onSurfaceTextureSizeChanged() with width " + width + " and height = " + height);
+            Log.i(TAG, "onSurfaceTextureSizeChanged() view width " + getWidth() + " and height = " + getHeight());
+//            setLayoutParams(new FrameLayout.LayoutParams(width, height));
             mNativeMapView.resizeFramebuffer(width, height);
         }
 
