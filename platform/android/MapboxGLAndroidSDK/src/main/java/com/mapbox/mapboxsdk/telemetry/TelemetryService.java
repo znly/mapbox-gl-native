@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ServiceInfo;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -139,6 +140,12 @@ public class TelemetryService extends Service {
     }
 
     private void shutdownTelemetry() {
+        Log.i(TAG, "shutdownTelemetry()");
+        Location loc = new Location("testtesttest");
+        loc.setLatitude(44.50119);
+        loc.setLongitude(-88.06220);
+        MapboxEventManager.getMapboxEventManager(getBaseContext()).addLocationEvent(loc);
+        MapboxEventManager.getMapboxEventManager(getBaseContext()).flushEventsQueueImmediately();
         unregisterReceiver(telemetryLocationReceiver);
         telemetryWakeLock.release();
     }

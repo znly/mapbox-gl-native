@@ -268,7 +268,7 @@ public class MapboxEventManager {
         events.add(event);
 
         // Send to Server Immediately
-        new FlushTheEventsTask().execute();
+        flushEventsQueueImmediately();
         Log.d(TAG, "turnstile event pushed.");
     }
 
@@ -425,12 +425,24 @@ public class MapboxEventManager {
     }
 
     /**
+     * Immediately attempt to send all events data in the queue to the server.
+     *
+     * NOTE: Permission set to package private to enable only telemetry code to use this.
+     */
+    void flushEventsQueueImmediately() {
+        Log.i(TAG, "flushEventsQueueImmediately() called...");
+        new FlushTheEventsTask().execute();
+    }
+
+    /**
      * Task responsible for converting stored events and sending them to the server
      */
     private class FlushTheEventsTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
+
+            Log.i(TAG, "FlushTheEventsTask.doInBackground() called...");
 
             if (events.size() < 1) {
                 Log.i(TAG, "No events in the queue to send so returning.");
@@ -493,7 +505,7 @@ public class MapboxEventManager {
                 RequestBody body = RequestBody.create(JSON, jsonArray.toString());
 
                 String url = eventsURL + "/events/v1?access_token=" + accessToken;
-                Log.d(TAG, "url = " + url);
+                Log.i(TAG, "url = " + url);
 
                 Request request = new Request.Builder()
                         .url(url)
@@ -501,7 +513,7 @@ public class MapboxEventManager {
                         .post(body)
                         .build();
                 Response response = client.newCall(request).execute();
-                Log.d(TAG, "Response Code from Mapbox Events Server: " + response.code() + " for " + events.size() + " events sent in.");
+                Log.i(TAG, "Response Code from Mapbox Events Server: " + response.code() + " for " + events.size() + " events sent in.");
 
                 // Reset Events
                 // ============
