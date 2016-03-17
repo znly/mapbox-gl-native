@@ -504,7 +504,7 @@ CameraOptions Map::cameraForLatLngs(const std::vector<LatLng>& latLngs, optional
     // Calculate the zoom level.
     double scaleX = getWidth() / width;
     double scaleY = getHeight() / height;
-    if (padding && *padding) {
+    if (padding) {
         scaleX -= (padding->left + padding->right) / width;
         scaleY -= (padding->top + padding->bottom) / height;
     }
@@ -514,7 +514,7 @@ CameraOptions Map::cameraForLatLngs(const std::vector<LatLng>& latLngs, optional
 
     // Calculate the center point of a virtual bounds that is extended in all directions by padding.
     ScreenCoordinate centerPixel = nePixel + swPixel;
-    if (padding && *padding) {
+    if (padding) {
         ScreenCoordinate paddedNEPixel = {
             padding->right / minScale,
             padding->top / minScale,
@@ -579,7 +579,7 @@ void Map::rotateBy(const ScreenCoordinate& first, const ScreenCoordinate& second
 }
 
 void Map::setBearing(double degrees, const Duration& duration) {
-    setBearing(degrees, EdgeInsets(), duration);
+    setBearing(degrees, optional<EdgeInsets>(), duration);
 }
 
 void Map::setBearing(double degrees, optional<ScreenCoordinate> anchor, const Duration& duration) {
