@@ -5,5 +5,5 @@
     <color name="gray">#7D7F80</color>
     <color name="gray_light">#EEEEEE</color>
     <color name="mapbox_blue">#1E8CAB</color>
-    <color name="my_location_ring">@color/mapbox_blue</color>
+    <color name="my_location_accuracy_ring">@color/mapbox_blue</color>
 </resources>

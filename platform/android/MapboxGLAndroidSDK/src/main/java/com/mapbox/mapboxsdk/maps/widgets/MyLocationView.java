@@ -115,7 +115,7 @@ public class MyLocationView extends View {
         // default implementation
         setShadowDrawable(ContextCompat.getDrawable(context, R.drawable.ic_userlocationview_shadow));
         setForegroundDrawables(ContextCompat.getDrawable(context, R.drawable.ic_userlocationview_normal), ContextCompat.getDrawable(context, R.drawable.ic_userlocationview_bearing));
-        setAccuracyTint(ColorUtils.getAccentColor(context));
+        setAccuracyTint(ContextCompat.getColor(context, R.color.my_location_accuracy_ring));
         setAccuracyAlpha(100);
     }
 
