@@ -4,9 +4,12 @@
 source core_deps.env
 
 # add/override additional deps
+GTEST_VERSION=1.7.0
 LIBJPEG_TURBO_VERSION=1.4.2
+NUNICODE_VERSION=1.6
+PIXELMATCH_VERSION=0.9.0
+RAPIDJSON_VERSION=1.0.2
 SQLITE_VERSION=3.9.1
-ZLIB_VERSION=system
 WEBP_VERSION=0.5.0
 
 function print_default_flags {
