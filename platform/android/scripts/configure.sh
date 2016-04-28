@@ -5,7 +5,6 @@ source core_deps.env
 
 # add/override additional deps
 SQLITE_VERSION=3.9.1
-LIBCURL_VERSION=system
 LIBPNG_VERSION=1.6.20
 LIBJPEG_TURBO_VERSION=1.4.2
 LIBUV_VERSION=1.7.5
