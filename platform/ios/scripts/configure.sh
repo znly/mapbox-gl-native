@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-BOOST_VERSION=1.59.0
+# inherit core deps
+source core_deps.env
+
+# add/override additional deps
 SQLITE_VERSION=system
-ZLIB_VERSION=system
-GEOJSONVT_VERSION=4.1.2
-VARIANT_VERSION=1.1.0
-RAPIDJSON_VERSION=1.0.2
-GTEST_VERSION=1.7.0
-PIXELMATCH_VERSION=0.9.0
