@@ -98,7 +98,6 @@ print_opengl_flags
 print_qt_flags
 
 # add new deps in core_deps.env or platform/*/scripts/configure.sh
-print_flags protozero cflags
 print_flags boost cflags
 print_flags boost_libprogram_options static_libs
 print_flags openssl static_libs cflags ldflags
