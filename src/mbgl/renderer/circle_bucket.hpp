@@ -8,8 +8,11 @@
 
 namespace mbgl {
 
-class CircleVertexBuffer;
-class CircleShader;
+class PaintParameters;
+
+namespace style {
+class CircleLayer;
+} // namespace style
 
 class CircleBucket : public Bucket {
     using TriangleGroup = ElementGroup<3>;
@@ -19,13 +22,14 @@ public:
     ~CircleBucket() override;
 
     void upload(gl::ObjectStore&, gl::Config&) override;
-    void render(Painter&, PaintParameters&, const style::Layer&, const RenderTile&) override;
 
     bool hasData() const override;
-    bool needsClipping() const override;
     void addGeometry(const GeometryCollection&);
 
-    void drawCircles(CircleShader&, gl::ObjectStore&);
+    void render(PaintParameters&,
+                RenderPass,
+                const RenderTile&,
+                const style::CircleLayer&);
 
 private:
     CircleVertexBuffer vertexBuffer_;

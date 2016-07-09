@@ -5,6 +5,9 @@
 #include <mbgl/style/layers/background_layer_properties.hpp>
 
 namespace mbgl {
+
+class PaintParameters;
+
 namespace style {
 
 class BackgroundLayer::Impl : public Layer::Impl {
@@ -14,6 +17,7 @@ public:
 
     void cascade(const CascadeParameters&) override;
     bool recalculate(const CalculationParameters&) override;
+    void render(PaintParameters&);
 
     std::unique_ptr<Bucket> createBucket(BucketParameters&) const override;
 

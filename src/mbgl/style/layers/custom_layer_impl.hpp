@@ -5,7 +5,7 @@
 
 namespace mbgl {
 
-class TransformState;
+class PaintParameters;
 
 namespace style {
 
@@ -21,7 +21,7 @@ public:
     ~Impl() final;
 
     void initialize();
-    void render(const TransformState&) const;
+    void render(PaintParameters&) const;
 
 private:
     std::unique_ptr<Layer> clone() const override;

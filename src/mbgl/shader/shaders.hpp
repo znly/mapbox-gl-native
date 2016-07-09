@@ -16,6 +16,8 @@
 #include <mbgl/shader/collision_box_shader.hpp>
 #include <mbgl/shader/circle_shader.hpp>
 
+#include <mbgl/geometry/vao.hpp>
+
 namespace mbgl {
 
 class Shaders {

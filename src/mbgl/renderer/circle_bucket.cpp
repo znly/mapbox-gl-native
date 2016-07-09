@@ -1,8 +1,13 @@
 #include <mbgl/renderer/circle_bucket.hpp>
-#include <mbgl/renderer/painter.hpp>
+#include <mbgl/renderer/paint_parameters.hpp>
+#include <mbgl/renderer/render_tile.hpp>
 
-#include <mbgl/shader/circle_shader.hpp>
+#include <mbgl/shader/shaders.hpp>
+#include <mbgl/map/transform_state.hpp>
+
 #include <mbgl/style/layers/circle_layer.hpp>
+#include <mbgl/style/layers/circle_layer_impl.hpp>
+
 #include <mbgl/util/constants.hpp>
 
 namespace mbgl {
@@ -22,19 +27,8 @@ void CircleBucket::upload(gl::ObjectStore& store, gl::Config&) {
     uploaded = true;
 }
 
-void CircleBucket::render(Painter& painter,
-                        PaintParameters& parameters, 
-                        const Layer& layer,
-                        const RenderTile& tile) {
-    painter.renderCircle(parameters, *this, *layer.as<CircleLayer>(), tile);
-}
-
 bool CircleBucket::hasData() const {
     return !triangleGroups_.empty();
-}
-
-bool CircleBucket::needsClipping() const {
-    return true;
 }
 
 void CircleBucket::addGeometry(const GeometryCollection& geometryCollection) {
@@ -82,7 +76,45 @@ void CircleBucket::addGeometry(const GeometryCollection& geometryCollection) {
     }
 }
 
-void CircleBucket::drawCircles(CircleShader& shader, gl::ObjectStore& store) {
+void CircleBucket::render(PaintParameters& parameters,
+                          RenderPass pass,
+                          const RenderTile& tile,
+                          const CircleLayer& layer) {
+    if (pass == RenderPass::Opaque) return;
+
+    parameters.config.stencilTest = mode == MapMode::Still ? GL_TRUE : GL_FALSE;
+    parameters.config.depthFunc.reset();
+    parameters.config.depthTest = GL_TRUE;
+    parameters.config.depthMask = GL_FALSE;
+    parameters.setDepthSublayer(0);
+    parameters.setClipping(tile.clip);
+
+    const CirclePaintProperties& paint = layer.impl->paint;
+    auto& shader = parameters.shaders.circle;
+
+    parameters.config.program = shader.getID();
+
+    shader.u_matrix = tile.translatedMatrix(paint.circleTranslate,
+                                            paint.circleTranslateAnchor,
+                                            parameters.state);
+
+    if (paint.circlePitchScale == CirclePitchScaleType::Map) {
+        shader.u_extrude_scale = {{
+            parameters.pixelsToGLUnits[0] * parameters.state.getAltitude(),
+            parameters.pixelsToGLUnits[1] * parameters.state.getAltitude()
+        }};
+        shader.u_scale_with_map = true;
+    } else {
+        shader.u_extrude_scale = parameters.pixelsToGLUnits;
+        shader.u_scale_with_map = false;
+    }
+
+    shader.u_devicepixelratio = parameters.pixelRatio;
+    shader.u_color = paint.circleColor;
+    shader.u_radius = paint.circleRadius;
+    shader.u_blur = paint.circleBlur;
+    shader.u_opacity = paint.circleOpacity;
+
     GLbyte* vertexIndex = BUFFER_OFFSET(0);
     GLbyte* elementsIndex = BUFFER_OFFSET(0);
 
@@ -91,7 +123,7 @@ void CircleBucket::drawCircles(CircleShader& shader, gl::ObjectStore& store) {
 
         if (!group->elements_length) continue;
 
-        group->array[0].bind(shader, vertexBuffer_, elementsBuffer_, vertexIndex, store);
+        group->array[0].bind(shader, vertexBuffer_, elementsBuffer_, vertexIndex, parameters.store);
 
         MBGL_CHECK_ERROR(glDrawElements(GL_TRIANGLES, group->elements_length * 3, GL_UNSIGNED_SHORT, elementsIndex));
 

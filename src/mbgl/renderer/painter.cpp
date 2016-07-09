@@ -10,9 +10,7 @@
 
 #include <mbgl/style/style.hpp>
 #include <mbgl/style/layer_impl.hpp>
-
-#include <mbgl/style/layers/background_layer.hpp>
-#include <mbgl/style/layers/custom_layer.hpp>
+#include <mbgl/style/layers/background_layer_impl.hpp>
 #include <mbgl/style/layers/custom_layer_impl.hpp>
 
 #include <mbgl/sprite/sprite_atlas.hpp>
@@ -59,22 +57,26 @@ bool Painter::needsAnimation() const {
     return frameHistory.needsAnimation(util::DEFAULT_FADE_DURATION);
 }
 
-void Painter::setClipping(const ClipID& clip) {
-    const GLint ref = (GLint)clip.reference.to_ulong();
-    const GLuint mask = (GLuint)clip.mask.to_ulong();
-    config.stencilFunc = { GL_EQUAL, ref, mask };
-}
-
 void Painter::render(const Style& style, const FrameData& frame_, SpriteAtlas& annotationSpriteAtlas) {
     frame = frame_;
 
     PaintParameters parameters {
-        isOverdraw() ? *overdrawShaders : *shaders
+        config,
+        store,
+        isOverdraw() ? *overdrawShaders : *shaders,
+        tileStencilBuffer,
+        rasterBoundsBuffer,
+        isOverdraw(),
+        frame.framebufferSize,
+        frame.pixelRatio,
+        frame.mapMode,
+        state,
+        pixelsToGLUnits,
+        *style.spriteAtlas,
+        *style.glyphAtlas,
+        *style.lineAtlas,
+        frameHistory
     };
-
-    glyphAtlas = style.glyphAtlas.get();
-    spriteAtlas = style.spriteAtlas.get();
-    lineAtlas = style.lineAtlas.get();
 
     RenderData renderData = style.getRenderData(frame.debugOptions);
     const std::vector<RenderItem>& order = renderData.order;
@@ -100,9 +102,9 @@ void Painter::render(const Style& style, const FrameData& frame_, SpriteAtlas& a
         tileStencilBuffer.upload(store);
         rasterBoundsBuffer.upload(store);
         tileBorderBuffer.upload(store);
-        spriteAtlas->upload(store, config, 0);
-        lineAtlas->upload(store, config, 0);
-        glyphAtlas->upload(store, config, 0);
+        parameters.spriteAtlas.upload(store, config, 0);
+        parameters.lineAtlas.upload(store, config, 0);
+        parameters.glyphAtlas.upload(store, config, 0);
         frameHistory.upload(store, config, 0);
         annotationSpriteAtlas.upload(store, config, 0);
 
@@ -162,7 +164,7 @@ void Painter::render(const Style& style, const FrameData& frame_, SpriteAtlas& a
     if (debug::renderTree) { Log::Info(Event::Render, "{"); indent++; }
 
     // TODO: Correctly compute the number of layers recursively beforehand.
-    depthRangeSize = 1 - (order.size() + 2) * numSublayers * depthEpsilon;
+    parameters.depthRangeSize = 1 - (order.size() + 2) * PaintParameters::numSublayers * PaintParameters::depthEpsilon;
 
     // - OPAQUE PASS -------------------------------------------------------------------------------
     // Render everything top-to-bottom by using reverse iterators. Render opaque objects first.
@@ -214,11 +216,9 @@ void Painter::render(const Style& style, const FrameData& frame_, SpriteAtlas& a
 
 template <class Iterator>
 void Painter::renderPass(PaintParameters& parameters,
-                         RenderPass pass_,
+                         RenderPass pass,
                          Iterator it, Iterator end,
                          GLsizei i, int8_t increment) {
-    pass = pass_;
-
     MBGL_DEBUG_GROUP(pass == RenderPass::Opaque ? "opaque" : "translucent");
 
     if (debug::renderTree) {
@@ -227,7 +227,7 @@ void Painter::renderPass(PaintParameters& parameters,
     }
 
     for (; it != end; ++it, i += increment) {
-        currentLayer = i;
+        parameters.currentLayer = i;
 
         const auto& item = *it;
         const Layer& layer = item.layer;
@@ -249,17 +249,14 @@ void Painter::renderPass(PaintParameters& parameters,
 
         if (layer.is<BackgroundLayer>()) {
             MBGL_DEBUG_GROUP("background");
-            renderBackground(parameters, *layer.as<BackgroundLayer>());
+            layer.as<BackgroundLayer>()->impl->render(parameters);
         } else if (layer.is<CustomLayer>()) {
             MBGL_DEBUG_GROUP(layer.baseImpl->id + " - custom");
             VertexArrayObject::Unbind();
-            layer.as<CustomLayer>()->impl->render(state);
+            layer.as<CustomLayer>()->impl->render(parameters);
             config.setDirty();
         } else {
             MBGL_DEBUG_GROUP(layer.baseImpl->id + " - " + util::toString(item.tile->id));
-            if (item.bucket->needsClipping()) {
-                setClipping(item.tile->clip);
-            }
             item.bucket->render(*this, parameters, layer, *item.tile);
         }
     }
@@ -267,12 +264,6 @@ void Painter::renderPass(PaintParameters& parameters,
     if (debug::renderTree) {
         Log::Info(Event::Render, "%*s%s", --indent * 4, "", "}");
     }
-}
-
-void Painter::setDepthSublayer(int n) {
-    float nearDepth = ((1 + currentLayer) * numSublayers + n) * depthEpsilon;
-    float farDepth = nearDepth + depthRangeSize;
-    config.depthRange = { nearDepth, farDepth };
 }
 
 } // namespace mbgl

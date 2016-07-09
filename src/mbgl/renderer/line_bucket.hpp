@@ -13,9 +13,10 @@ namespace mbgl {
 
 class LineVertexBuffer;
 class TriangleElementsBuffer;
-class LineShader;
-class LineSDFShader;
-class LinepatternShader;
+
+namespace style {
+class LineLayer;
+} // namespace style
 
 class LineBucket : public Bucket {
     using TriangleGroup = ElementGroup<6>;
@@ -25,16 +26,15 @@ public:
     ~LineBucket() override;
 
     void upload(gl::ObjectStore&, gl::Config&) override;
-    void render(Painter&, PaintParameters&, const style::Layer&, const RenderTile&) override;
     bool hasData() const override;
-    bool needsClipping() const override;
 
     void addGeometry(const GeometryCollection&);
     void addGeometry(const GeometryCoordinates& line);
 
-    void drawLines(LineShader&, gl::ObjectStore&, bool overdraw);
-    void drawLineSDF(LineSDFShader&, gl::ObjectStore&, bool overdraw);
-    void drawLinePatterns(LinepatternShader&, gl::ObjectStore&, bool overdraw);
+    void render(PaintParameters&,
+                RenderPass,
+                const RenderTile&,
+                const style::LineLayer&);
 
 private:
     struct TriangleElement {

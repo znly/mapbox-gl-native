@@ -11,7 +11,8 @@
 
 namespace mbgl {
 
-struct ClipID {
+class ClipID {
+public:
     ClipID() {}
     ClipID(const std::string &mask_, const std::string &reference_) : mask(mask_), reference(reference_) {}
 

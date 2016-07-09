@@ -32,6 +32,10 @@ class GlyphAtlas;
 class GlyphStore;
 class IndexedSubfeature;
 
+namespace style {
+class SymbolLayer;
+} // namespace style
+
 class SymbolFeature {
 public:
     GeometryCollection geometry;
@@ -70,28 +74,53 @@ public:
     ~SymbolBucket() override;
 
     void upload(gl::ObjectStore&, gl::Config&) override;
-    void render(Painter&, PaintParameters&, const style::Layer&, const RenderTile&) override;
     bool hasData() const override;
     bool hasTextData() const;
     bool hasIconData() const;
     bool hasCollisionBoxData() const;
-    bool needsClipping() const override;
 
     void addFeatures(uintptr_t tileUID,
                      SpriteAtlas&,
                      GlyphAtlas&,
                      GlyphStore&);
 
+    void parseFeatures(const GeometryTileLayer&, const style::Filter&);
+    bool needsDependencies(GlyphStore&, SpriteStore&);
+    void placeFeatures(CollisionTile&) override;
+
+    void render(PaintParameters&,
+                RenderPass,
+                const RenderTile&,
+                const style::SymbolLayer&);
+
+private:
+    void renderSDF(PaintParameters& parameters,
+                   const RenderTile&,
+                   float scaleDivisor,
+                   std::array<float, 2> texsize,
+                   SDFShader& sdfShader,
+                   void (SymbolBucket::*drawSDF)(SDFShader&, gl::ObjectStore&, bool),
+
+                   // Layout
+                   style::AlignmentType rotationAlignment,
+                   style::AlignmentType pitchAlignment,
+                   float layoutSize,
+
+                   // Paint
+                   float opacity,
+                   Color color,
+                   Color haloColor,
+                   float haloWidth,
+                   float haloBlur,
+                   std::array<float, 2> translate,
+                   style::TranslateAnchorType translateAnchor,
+                   float paintSize);
+
     void drawGlyphs(SDFShader&, gl::ObjectStore&, bool overdraw);
     void drawIcons(SDFShader&, gl::ObjectStore&, bool overdraw);
     void drawIcons(IconShader&, gl::ObjectStore&, bool overdraw);
     void drawCollisionBoxes(CollisionBoxShader&, gl::ObjectStore&);
 
-    void parseFeatures(const GeometryTileLayer&, const style::Filter&);
-    bool needsDependencies(GlyphStore&, SpriteStore&);
-    void placeFeatures(CollisionTile&) override;
-
-private:
     void addFeature(const GeometryCollection &lines,
             const Shaping &shapedText, const PositionedIcon &shapedIcon,
             const GlyphPositions &face,

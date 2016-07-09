@@ -29,37 +29,13 @@ namespace mbgl {
 
 class RenderTile;
 class SpriteAtlas;
-class GlyphAtlas;
-class LineAtlas;
-struct FrameData;
 class Tile;
-
-class DebugBucket;
-class FillBucket;
-class LineBucket;
-class CircleBucket;
-class SymbolBucket;
-class RasterBucket;
-
 class Shaders;
-class SDFShader;
 class PaintParameters;
-
-struct ClipID;
-
-namespace util {
-class ObjectStore;
-} // namespace util
+class ClipID;
 
 namespace style {
 class Style;
-class Source;
-class FillLayer;
-class LineLayer;
-class CircleLayer;
-class SymbolLayer;
-class RasterLayer;
-class BackgroundLayer;
 } // namespace style
 
 struct FrameData {
@@ -89,17 +65,6 @@ public:
     void renderClipMasks();
 
     void renderDebugText(Tile&, const mat4&);
-    void renderFill(PaintParameters&, FillBucket&, const style::FillLayer&, const RenderTile&);
-    void renderLine(PaintParameters&, LineBucket&, const style::LineLayer&, const RenderTile&);
-    void renderCircle(PaintParameters&, CircleBucket&, const style::CircleLayer&, const RenderTile&);
-    void renderSymbol(PaintParameters&, SymbolBucket&, const style::SymbolLayer&, const RenderTile&);
-    void renderRaster(PaintParameters&, RasterBucket&, const style::RasterLayer&, const RenderTile&);
-    void renderBackground(PaintParameters&, const style::BackgroundLayer&);
-
-    float saturationFactor(float saturation);
-    float contrastFactor(float contrast);
-    std::array<float, 3> spinWeights(float spin_value);
-
     void drawClippingMasks(PaintParameters&, const std::map<UnwrappedTileID, ClipID>&);
 
     bool needsAnimation() const;
@@ -113,43 +78,11 @@ private:
                     Iterator it, Iterator end,
                     GLsizei i, int8_t increment);
 
-    void setClipping(const ClipID&);
-
-    void renderSDF(SymbolBucket&,
-                   const RenderTile&,
-                   float scaleDivisor,
-                   std::array<float, 2> texsize,
-                   SDFShader& sdfShader,
-                   void (SymbolBucket::*drawSDF)(SDFShader&, gl::ObjectStore&, bool),
-
-                   // Layout
-                   style::AlignmentType rotationAlignment,
-                   style::AlignmentType pitchAlignment,
-                   float layoutSize,
-
-                   // Paint
-                   float opacity,
-                   Color color,
-                   Color haloColor,
-                   float haloWidth,
-                   float haloBlur,
-                   std::array<float, 2> translate,
-                   style::TranslateAnchorType translateAnchor,
-                   float paintSize);
-
-    void setDepthSublayer(int n);
-
     bool isOverdraw() const { return frame.debugOptions & MapDebugOptions::Overdraw; }
 
     mat4 projMatrix;
 
     std::array<float, 2> pixelsToGLUnits;
-
-    const mat4 identityMatrix = []{
-        mat4 identity;
-        matrix::identity(identity);
-        return identity;
-    }();
 
     const TransformState& state;
     gl::ObjectStore& store;
@@ -159,17 +92,6 @@ private:
     int indent = 0;
 
     gl::Config config;
-
-    RenderPass pass = RenderPass::Opaque;
-
-    int numSublayers = 3;
-    GLsizei currentLayer;
-    float depthRangeSize;
-    const float depthEpsilon = 1.0f / (1 << 16);
-
-    SpriteAtlas* spriteAtlas = nullptr;
-    GlyphAtlas* glyphAtlas = nullptr;
-    LineAtlas* lineAtlas = nullptr;
 
     FrameHistory frameHistory;
 

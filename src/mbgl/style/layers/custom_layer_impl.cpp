@@ -1,5 +1,6 @@
 #include <mbgl/style/layers/custom_layer_impl.hpp>
 #include <mbgl/renderer/bucket.hpp>
+#include <mbgl/renderer/paint_parameters.hpp>
 #include <mbgl/map/transform_state.hpp>
 
 namespace mbgl {
@@ -43,19 +44,19 @@ void CustomLayer::Impl::initialize() {
     initializeFn(context);
 }
 
-void CustomLayer::Impl::render(const TransformState& state) const {
+void CustomLayer::Impl::render(PaintParameters& parameters_) const {
     assert(renderFn);
 
     CustomLayerRenderParameters parameters;
 
-    parameters.width = state.getWidth();
-    parameters.height = state.getHeight();
-    parameters.latitude = state.getLatLng().latitude;
-    parameters.longitude = state.getLatLng().longitude;
-    parameters.zoom = state.getZoom();
-    parameters.bearing = -state.getAngle() * util::RAD2DEG;
-    parameters.pitch = state.getPitch();
-    parameters.altitude = state.getAltitude();
+    parameters.width = parameters_.state.getWidth();
+    parameters.height = parameters_.state.getHeight();
+    parameters.latitude = parameters_.state.getLatLng().latitude;
+    parameters.longitude = parameters_.state.getLatLng().longitude;
+    parameters.zoom = parameters_.state.getZoom();
+    parameters.bearing = -parameters_.state.getAngle() * util::RAD2DEG;
+    parameters.pitch = parameters_.state.getPitch();
+    parameters.altitude = parameters_.state.getAltitude();
 
     renderFn(context, parameters);
 }

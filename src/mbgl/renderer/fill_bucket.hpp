@@ -15,24 +15,31 @@ class PlainShader;
 class PatternShader;
 class OutlineShader;
 
+namespace style {
+class FillLayer;
+} // namespace style
+
 class FillBucket : public Bucket {
 public:
     FillBucket();
     ~FillBucket() override;
 
     void upload(gl::ObjectStore&, gl::Config&) override;
-    void render(Painter&, PaintParameters&, const style::Layer&, const RenderTile&) override;
     bool hasData() const override;
-    bool needsClipping() const override;
 
     void addGeometry(const GeometryCollection&);
 
+    void render(PaintParameters&,
+                RenderPass,
+                const RenderTile&,
+                const style::FillLayer&);
+
+private:
     void drawElements(PlainShader&, gl::ObjectStore&, bool overdraw);
     void drawElements(PatternShader&, gl::ObjectStore&, bool overdraw);
     void drawVertices(OutlineShader&, gl::ObjectStore&, bool overdraw);
     void drawVertices(OutlinePatternShader&, gl::ObjectStore&, bool overdraw);
 
-private:
     FillVertexBuffer vertexBuffer;
     TriangleElementsBuffer triangleElementsBuffer;
     LineElementsBuffer lineElementsBuffer;
