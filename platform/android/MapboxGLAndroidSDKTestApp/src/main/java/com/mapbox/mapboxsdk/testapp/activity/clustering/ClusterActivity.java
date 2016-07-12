@@ -140,20 +140,27 @@ public class ClusterActivity extends AppCompatActivity implements MapboxMap.OnCa
                 AnimatorUtils.alpha(parentTextView, 1);
                 for (ClusterView textview : childTextViews) {
                     if (textview.getVisibility() == View.VISIBLE) {
-                        textview.setVisibility(View.INVISIBLE);
+                        textview.collapse(point);
                     }
-                    textview.setX(point.x);
-                    textview.setY(point.y);
+
+                    if(!textview.isAnimating()) {
+                        textview.setX(point.x);
+                        textview.setY(point.y);
+                    }
                 }
             } else {
                 AnimatorUtils.alpha(parentTextView, 0);
                 for (ClusterView textview : childTextViews) {
                     if (textview.getVisibility() == View.INVISIBLE) {
-                        textview.setVisibility(View.VISIBLE);
+                        textview.expand(projection);
+                    } else {
+                        // need to update x,y if we are not animating anymore
+                        if (!textview.isAnimating()) {
+                            PointF childPoint = projection.toScreenLocation(textview.getLocation());
+                            textview.setX(childPoint.x);
+                            textview.setY(childPoint.y);
+                        }
                     }
-                    PointF childPoint = projection.toScreenLocation(textview.getLocation());
-                    textview.setX(childPoint.x);
-                    textview.setY(childPoint.y);
                 }
             }
         }
