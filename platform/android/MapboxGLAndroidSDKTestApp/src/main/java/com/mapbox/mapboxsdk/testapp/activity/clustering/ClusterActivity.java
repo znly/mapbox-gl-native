@@ -23,6 +23,8 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
 import com.mapbox.mapboxsdk.testapp.R;
+import com.mapbox.mapboxsdk.testapp.view.ClusterView;
+import com.mapbox.mapboxsdk.utils.AnimatorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public class ClusterActivity extends AppCompatActivity implements MapboxMap.OnCa
     private static final LatLng LAT_LNG_BRUSSEL = new LatLng(50.861592, 4.359965);
 
     private TextView parentTextView;
-    private List<TextView> childTextViews;
+    private List<ClusterView> childTextViews;
     private Projection projection;
 
     @Override
@@ -95,16 +97,10 @@ public class ClusterActivity extends AppCompatActivity implements MapboxMap.OnCa
         mMapView.addView(parentTextView);
     }
 
-    private TextView createChildView(String text, LatLng location) {
-        TextView textView = new TextView(this);
+    private ClusterView createChildView(String text, LatLng location) {
+        ClusterView textView = new ClusterView(this);
         textView.setText(text);
-        textView.setTag(location);
-        textView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        textView.setTextColor(Color.WHITE);
-        textView.setGravity(Gravity.CENTER);
-        textView.setBackgroundColor(Color.GRAY);
-        textView.setPadding(32, 32, 32, 32);
-        textView.setVisibility(View.INVISIBLE);
+        textView.setLocation(location);
         mMapView.addView(textView);
         return textView;
     }
@@ -141,8 +137,8 @@ public class ClusterActivity extends AppCompatActivity implements MapboxMap.OnCa
             parentTextView.setY(point.y);
 
             if (mCollapsedCluster) {
-                parentTextView.setVisibility(View.VISIBLE);
-                for (TextView textview : childTextViews) {
+                AnimatorUtils.alpha(parentTextView, 1);
+                for (ClusterView textview : childTextViews) {
                     if (textview.getVisibility() == View.VISIBLE) {
                         textview.setVisibility(View.INVISIBLE);
                     }
@@ -150,12 +146,12 @@ public class ClusterActivity extends AppCompatActivity implements MapboxMap.OnCa
                     textview.setY(point.y);
                 }
             } else {
-                parentTextView.setVisibility(View.GONE);
-                for (TextView textview : childTextViews) {
+                AnimatorUtils.alpha(parentTextView, 0);
+                for (ClusterView textview : childTextViews) {
                     if (textview.getVisibility() == View.INVISIBLE) {
                         textview.setVisibility(View.VISIBLE);
                     }
-                    PointF childPoint = projection.toScreenLocation((LatLng) textview.getTag());
+                    PointF childPoint = projection.toScreenLocation(textview.getLocation());
                     textview.setX(childPoint.x);
                     textview.setY(childPoint.y);
                 }
