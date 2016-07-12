@@ -52,6 +52,7 @@
     <string name="activity_debug_mode">Debug Mode</string>
     <string name="activity_offline">Offline Map</string>
     <string name="activity_minmax_zoom">Min/Max Zoom</string>
+    <string name="activity_clustering">Clustering (Experimental)</string>
 
     <!-- Description -->
     <string name="description_user_location_tracking">Tracks the location of the user</string>
@@ -88,6 +89,7 @@
     <string name="description_view_marker_scale">Scale a View Marker</string>
     <string name="description_dynamic_info_window_adapter">Learn how to create a dynamic custom InfoWindow</string>
     <string name="description_location_picker">Use a fixed Marker to select your location</string>
+    <string name="description_clustering">Marker View clustering animation</string>
 
     <string name="menuitem_title_concurrent_infowindow">Concurrent Open InfoWindows</string>
     <string name="menuitem_title_deselect_markers_on_tap">Deselect Markers On Tap</string>
@@ -108,6 +110,7 @@
     <string name="category_offline">Offline</string>
     <string name="category_userlocation">User Location</string>
     <string name="category_navigation">Navigation</string>
+    <string name="category_clustering">Clustering</string>
 
     <string name="action_visible_bounds_explanation">Center map around 2 markers</string>
     <string name="action_remove_polylines">Remove polylines</string>
