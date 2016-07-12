@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -23,14 +24,24 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Projection;
 import com.mapbox.mapboxsdk.testapp.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClusterActivity extends AppCompatActivity implements MapboxMap.OnCameraChangeListener {
 
     private MapView mMapView;
     private MapboxMap mMapboxMap;
+
     private boolean mCollapsedCluster;
 
     private static final LatLng LAT_LNG = new LatLng(51.502615, 4.972326);
+    private static final LatLng LAT_LNG_UTRECHT = new LatLng(52.090432, 5.122310);
+    private static final LatLng LAT_LNG_MAASTRICHT = new LatLng(50.851274, 5.694722);
+    private static final LatLng LAT_LNG_BRUSSEL = new LatLng(50.861592, 4.359965);
+
     private TextView parentTextView;
+    private List<TextView> childTextViews;
+    private Projection projection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,29 +66,47 @@ public class ClusterActivity extends AppCompatActivity implements MapboxMap.OnCa
                 mMapboxMap = mapboxMap;
                 setupMap();
 
-                final Projection projection = mapboxMap.getProjection();
+                projection = mapboxMap.getProjection();
                 mMapView.addOnMapChangedListener(new MapView.OnMapChangedListener() {
 
                     @Override
                     public void onMapChanged(@MapView.MapChange int change) {
                         if (change == MapView.REGION_IS_CHANGING || change == MapView.REGION_DID_CHANGE || change == MapView.DID_FINISH_LOADING_MAP) {
-                            PointF point = projection.toScreenLocation(LAT_LNG);
-                            parentTextView.setX(point.x);
-                            parentTextView.setY(point.y);
+                            invalidateCluster();
                         }
                     }
                 });
             }
         });
 
+        childTextViews = new ArrayList<>();
+        childTextViews.add(createChildView("Brussel", LAT_LNG_BRUSSEL));
+        childTextViews.add(createChildView("Utrecht", LAT_LNG_UTRECHT));
+        childTextViews.add(createChildView("Maastricht", LAT_LNG_MAASTRICHT));
+
         parentTextView = new TextView(this);
         parentTextView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         parentTextView.setText("3");
         parentTextView.setTextColor(Color.WHITE);
         parentTextView.setGravity(Gravity.CENTER);
-        parentTextView.setBackgroundColor(Color.RED);
+        parentTextView.setVisibility(View.INVISIBLE);
+        parentTextView.setBackgroundResource(R.drawable.round);
         parentTextView.setPadding(32, 32, 32, 32);
         mMapView.addView(parentTextView);
+    }
+
+    private TextView createChildView(String text, LatLng location) {
+        TextView textView = new TextView(this);
+        textView.setText(text);
+        textView.setTag(location);
+        textView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        textView.setTextColor(Color.WHITE);
+        textView.setGravity(Gravity.CENTER);
+        textView.setBackgroundColor(Color.GRAY);
+        textView.setPadding(32, 32, 32, 32);
+        textView.setVisibility(View.INVISIBLE);
+        mMapView.addView(textView);
+        return textView;
     }
 
     private void setupMap() {
@@ -86,21 +115,52 @@ public class ClusterActivity extends AppCompatActivity implements MapboxMap.OnCa
 
     @Override
     public void onCameraChange(CameraPosition position) {
-        if (position.zoom <= 6 && !mCollapsedCluster) {
+        if (position.zoom <= 7 && !mCollapsedCluster) {
             collapseCluster();
-        } else if (position.zoom > 6 && mCollapsedCluster) {
+        } else if (position.zoom > 7 && mCollapsedCluster) {
             expandCluster();
         }
     }
 
     private void expandCluster() {
-        mCollapsedCluster = false;
         Log.e(MapboxConstants.TAG, "Expanding cluster");
+        mCollapsedCluster = false;
+        invalidateCluster();
     }
 
     private void collapseCluster() {
-        mCollapsedCluster = true;
         Log.e(MapboxConstants.TAG, "Collapsing cluster");
+        mCollapsedCluster = true;
+        invalidateCluster();
+    }
+
+    private void invalidateCluster() {
+        if (projection != null) {
+            PointF point = projection.toScreenLocation(LAT_LNG);
+            parentTextView.setX(point.x);
+            parentTextView.setY(point.y);
+
+            if (mCollapsedCluster) {
+                parentTextView.setVisibility(View.VISIBLE);
+                for (TextView textview : childTextViews) {
+                    if (textview.getVisibility() == View.VISIBLE) {
+                        textview.setVisibility(View.INVISIBLE);
+                    }
+                    textview.setX(point.x);
+                    textview.setY(point.y);
+                }
+            } else {
+                parentTextView.setVisibility(View.GONE);
+                for (TextView textview : childTextViews) {
+                    if (textview.getVisibility() == View.INVISIBLE) {
+                        textview.setVisibility(View.VISIBLE);
+                    }
+                    PointF childPoint = projection.toScreenLocation((LatLng) textview.getTag());
+                    textview.setX(childPoint.x);
+                    textview.setY(childPoint.y);
+                }
+            }
+        }
     }
 
     @Override
