@@ -41,7 +41,7 @@ macro(mbgl_platform_core)
         # Headless view
         PRIVATE platform/default/headless_display.cpp
         PRIVATE platform/default/headless_view.cpp
-        PRIVATE platform/default/headless_view_glx.cpp
+        PRIVATE platform/default/headless_view_egl.cpp
     )
 
     target_include_directories(mbgl-core
@@ -58,7 +58,8 @@ macro(mbgl_platform_core)
         PUBLIC -lz
         PUBLIC -lcurl
         PUBLIC -lGL
-        PUBLIC -lX11
+        PUBLIC -lEGL
+        PUBLIC -lgbm
     )
 endmacro()
 
