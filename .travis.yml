@@ -8,13 +8,13 @@ addons_shortcuts:
       sources:  [ 'ubuntu-toolchain-r-test', 'george-edison55-precise-backports' ]
       packages: [ 'clang-3.5', 'libstdc++-4.9-dev', 'libstdc++6', 'libllvm3.4', 'cmake', 'cmake-data',
                   'mesa-utils', 'libxi-dev', 'libglu1-mesa-dev', 'x11proto-randr-dev', 'x11proto-xext-dev', 'libxrandr-dev',
-                  'x11proto-xf86vidmode-dev', 'libxxf86vm-dev', 'libxcursor-dev', 'libxinerama-dev' ]
+                  'x11proto-xf86vidmode-dev', 'libxxf86vm-dev', 'libxcursor-dev', 'libxinerama-dev', 'libx11-xcb-dev' ]
   addons_gcc5: &gcc5
     apt:
       sources:  [ 'ubuntu-toolchain-r-test', 'george-edison55-precise-backports' ]
       packages: [ 'gdb', 'g++-5', 'gcc-5', 'cmake', 'cmake-data',
                   'mesa-utils', 'libxi-dev', 'libglu1-mesa-dev', 'x11proto-randr-dev', 'x11proto-xext-dev', 'libxrandr-dev',
-                  'x11proto-xf86vidmode-dev', 'libxxf86vm-dev', 'libxcursor-dev', 'libxinerama-dev' ]
+                  'x11proto-xf86vidmode-dev', 'libxxf86vm-dev', 'libxcursor-dev', 'libxinerama-dev', 'libx11-xcb-dev', 'libxcb-glx0-dev', 'libxcb-dri2-0-dev' ]
   addons_qt4: &qt4
     apt:
       sources:  [ 'ubuntu-toolchain-r-test', 'george-edison55-precise-backports' ]
@@ -64,12 +64,12 @@ matrix:
       before_script:
         - export PACKAGE_JSON_VERSION=$(node -e "console.log(require('./package.json').version)")
         - export PUBLISH=$([[ ${TAG} == "node-v${PACKAGE_JSON_VERSION}" ]] && echo 1 || echo 0)
-        - export BUILDTYPE=$([[ ${PUBLISH} ]] && echo "Release" || echo "Debug")
+        - export BUILDTYPE=$([[ ${PUBLISH} -eq 1 ]] && echo "Release" || echo "Debug")
       script:
         - nvm install 4
         - nvm use 4
         - make node
-        - if [[ ! ${PUBLISH} ]]; then make test-node; fi
+        - if [[ ${PUBLISH} -eq 0 ]]; then make test-node; fi
       after_script:
         - ccache --show-stats
         - ./platform/node/scripts/after_script.sh ${TRAVIS_JOB_NUMBER} ${TRAVIS_TAG:-}
