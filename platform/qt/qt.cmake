@@ -1,6 +1,10 @@
 # This file is to be reused by target platforms that don't
 # support `mason` (i.e. Yocto). Do not add any `mason` macro.
 
+find_package(GL)
+find_package(EGL)
+find_package(gbm)
+
 option(WITH_QT_DECODERS "Use builtin Qt image decoders" OFF)
 option(WITH_QT_4        "Use Qt4 instead of Qt5"        OFF)
 
@@ -87,10 +91,13 @@ else()
     list(APPEND MBGL_QT_FILES
         PRIVATE platform/default/thread.cpp
         PRIVATE platform/default/headless_view_egl.cpp
+        PRIVATE ${GL_INCLUDE_DIRS}
+        PRIVATE ${EGL_INCLUDE_DIRS}
+        PRIVATE ${gbm_INCLUDE_DIRS}
     )
     list(APPEND MBGL_QT_LIBRARIES
-        PRIVATE -lGL
-        PRIVATE -lEGL
-        PRIVATE -lgbm
+        PRIVATE ${GL_LIBRARIES}
+        PRIVATE ${EGL_LIBRARIES}
+        PRIVATE ${gbm_LIBRARIES}
     )
 endif()

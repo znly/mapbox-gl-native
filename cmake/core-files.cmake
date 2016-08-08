@@ -117,7 +117,6 @@ set(MBGL_CORE_FILES
     include/mbgl/platform/darwin/reachability.h
 
     # platform/default
-    include/mbgl/platform/default/glfw_view.hpp
     include/mbgl/platform/default/headless_display.hpp
     include/mbgl/platform/default/headless_view.hpp
     include/mbgl/platform/default/settings_json.hpp

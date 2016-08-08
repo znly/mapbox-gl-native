@@ -8,6 +8,10 @@ mason_use(libjpeg-turbo VERSION 1.4.2)
 mason_use(webp VERSION 0.5.0)
 mason_use(gtest VERSION 1.7.0${MASON_CXXABI_SUFFIX})
 
+find_package(GL)
+find_package(EGL)
+find_package(gbm)
+
 include(cmake/loop-uv.cmake)
 
 macro(mbgl_platform_core)
@@ -46,6 +50,9 @@ macro(mbgl_platform_core)
 
     target_include_directories(mbgl-core
         PRIVATE platform/default
+        PUBLIC ${GL_INCLUDE_DIRS}
+        PUBLIC ${EGL_INCLUDE_DIRS}
+        PUBLIC ${gbm_INCLUDE_DIRS}
     )
 
     target_add_mason_package(mbgl-core PUBLIC sqlite)
@@ -57,9 +64,9 @@ macro(mbgl_platform_core)
     target_link_libraries(mbgl-core
         PUBLIC -lz
         PUBLIC -lcurl
-        PUBLIC -lGL
-        PUBLIC -lEGL
-        PUBLIC -lgbm
+        PUBLIC ${GL_LIBRARIES}
+        PUBLIC ${EGL_LIBRARIES}
+        PUBLIC ${gbm_LIBRARIES}
     )
 endmacro()
 
@@ -67,6 +74,7 @@ endmacro()
 macro(mbgl_platform_glfw)
     target_link_libraries(mbgl-glfw
         PRIVATE mbgl-loop
+        PUBLIC -lX11
     )
 endmacro()
 
