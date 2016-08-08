@@ -86,10 +86,11 @@ if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
 else()
     list(APPEND MBGL_QT_FILES
         PRIVATE platform/default/thread.cpp
-        PRIVATE platform/default/headless_view_glx.cpp
+        PRIVATE platform/default/headless_view_egl.cpp
     )
     list(APPEND MBGL_QT_LIBRARIES
         PRIVATE -lGL
-        PRIVATE -lX11
+        PRIVATE -lEGL
+        PRIVATE -lgbm
     )
 endif()
