@@ -4597,6 +4597,12 @@ mbgl::Duration MGLDurationInSeconds(NSTimeInterval duration)
                 annotationContext.annotationView = annotationView;
             }
         }
+       
+        // if there is no annotationView at this point then we are dealing with a sprite backed annotation
+        if (!annotationView)
+        {
+            continue;
+        }
         
         bool annotationViewIsVisible = CGRectContainsRect(viewPort, annotationView.frame);
         if (!annotationViewIsVisible)
