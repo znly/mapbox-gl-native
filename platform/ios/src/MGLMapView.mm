@@ -1728,7 +1728,10 @@ public:
     else if (buttonIndex > 0)
     {
         MGLAttributionInfo *info = _attributionInfos[buttonIndex + actionSheet.firstOtherButtonIndex];
-        [[UIApplication sharedApplication] openURL:info.URL];
+        if (info.URL)
+        {
+            [[UIApplication sharedApplication] openURL:info.URL];
+        }
     }
 }
 
