@@ -412,6 +412,7 @@
 		DD4823761D94AE6C00EB71B7 /* line_filter_style.json in Resources */ = {isa = PBXBuildFile; fileRef = DD4823731D94AE6C00EB71B7 /* line_filter_style.json */; };
 		DD4823771D94AE6C00EB71B7 /* numeric_filter_style.json in Resources */ = {isa = PBXBuildFile; fileRef = DD4823741D94AE6C00EB71B7 /* numeric_filter_style.json */; };
 		DD58A4C61D822BD000E1F038 /* MGLExpressionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = DD58A4C51D822BD000E1F038 /* MGLExpressionTests.mm */; };
+		DAEDC4341D603417000224FF /* MGLAttributionInfoTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = DAEDC4331D603417000224FF /* MGLAttributionInfoTests.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -771,6 +772,7 @@
 		DD4823731D94AE6C00EB71B7 /* line_filter_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = line_filter_style.json; sourceTree = "<group>"; };
 		DD4823741D94AE6C00EB71B7 /* numeric_filter_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = numeric_filter_style.json; sourceTree = "<group>"; };
 		DD58A4C51D822BD000E1F038 /* MGLExpressionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MGLExpressionTests.mm; path = ../../darwin/test/MGLExpressionTests.mm; sourceTree = "<group>"; };
+		DAEDC4331D603417000224FF /* MGLAttributionInfoTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MGLAttributionInfoTests.mm; path = ../../darwin/test/MGLAttributionInfoTests.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1058,6 +1060,7 @@
 			isa = PBXGroup;
 			children = (
 				357579811D502AD4000B822E /* Styling */,
+				DAEDC4331D603417000224FF /* MGLAttributionInfoTests.mm */,
 				353D23951D0B0DFE002BE09D /* MGLAnnotationViewTests.m */,
 				DA35A2C31CCA9F8300E826B2 /* MGLClockDirectionFormatterTests.m */,
 				DA35A2C41CCA9F8300E826B2 /* MGLCompassDirectionFormatterTests.m */,
@@ -1899,6 +1902,7 @@
 				DA35A2C61CCA9F8300E826B2 /* MGLCompassDirectionFormatterTests.m in Sources */,
 				3575798E1D502EC7000B822E /* MGLRuntimeStylingHelper.m in Sources */,
 				4085AF091D933DEA00F11B22 /* MGLTileSetTests.mm in Sources */,
+				DAEDC4341D603417000224FF /* MGLAttributionInfoTests.mm in Sources */,
 				357579851D502AF5000B822E /* MGLSymbolStyleLayerTests.m in Sources */,
 				357579871D502AFE000B822E /* MGLLineStyleLayerTests.m in Sources */,
 				357579891D502B06000B822E /* MGLCircleStyleLayerTests.m in Sources */,

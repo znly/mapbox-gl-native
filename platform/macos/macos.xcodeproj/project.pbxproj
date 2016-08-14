@@ -183,6 +183,7 @@
 		DAED385F1D62CED700D7640F /* NSURL+MGLAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DAED385D1D62CED700D7640F /* NSURL+MGLAdditions.h */; };
 		DAED38601D62CED700D7640F /* NSURL+MGLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DAED385E1D62CED700D7640F /* NSURL+MGLAdditions.m */; };
 		DD58A4C91D822C6700E1F038 /* MGLExpressionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = DD58A4C71D822C6200E1F038 /* MGLExpressionTests.mm */; };
+		DAEDC4321D6033F1000224FF /* MGLAttributionInfoTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = DAEDC4311D6033F1000224FF /* MGLAttributionInfoTests.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -418,6 +419,7 @@
 		DAED385D1D62CED700D7640F /* NSURL+MGLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+MGLAdditions.h"; sourceTree = "<group>"; };
 		DAED385E1D62CED700D7640F /* NSURL+MGLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+MGLAdditions.m"; sourceTree = "<group>"; };
 		DD58A4C71D822C6200E1F038 /* MGLExpressionTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MGLExpressionTests.mm; path = ../../darwin/test/MGLExpressionTests.mm; sourceTree = "<group>"; };
+		DAEDC4311D6033F1000224FF /* MGLAttributionInfoTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MGLAttributionInfoTests.mm; path = ../../darwin/test/MGLAttributionInfoTests.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -770,6 +772,7 @@
 			isa = PBXGroup;
 			children = (
 				DA8F257D1D51C5F40010E6B5 /* Styling */,
+				DAEDC4311D6033F1000224FF /* MGLAttributionInfoTests.mm */,
 				DA35A2C11CCA9F4A00E826B2 /* MGLClockDirectionFormatterTests.m */,
 				DA35A2B51CCA14D700E826B2 /* MGLCompassDirectionFormatterTests.m */,
 				DA35A2A71CC9F41600E826B2 /* MGLCoordinateFormatterTests.m */,
@@ -1183,6 +1186,7 @@
 				DD58A4C91D822C6700E1F038 /* MGLExpressionTests.mm in Sources */,
 				DAE6C3D31CC34C9900DB3429 /* MGLOfflinePackTests.m in Sources */,
 				DA35A2A81CC9F41600E826B2 /* MGLCoordinateFormatterTests.m in Sources */,
+				DAEDC4321D6033F1000224FF /* MGLAttributionInfoTests.mm in Sources */,
 				DA0CD58E1CF56F5800A5F5A5 /* MGLFeatureTests.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
