@@ -1678,10 +1678,10 @@ public:
                                                otherButtonTitles:nil];
     
     // Convert attribution HTML strings in TileJSON into structured data.
-    _attributionInfos = MGLAttributionInfosFromHTMLStrings(_mbglMap->getAttributions());
+    _attributionInfos = MGLAttributionInfosFromHTMLStrings(_mbglMap->getAttributions(), nil);
     for (MGLAttributionInfo *info in _attributionInfos)
     {
-        [self.attributionSheet addButtonWithTitle:info.title];
+        [self.attributionSheet addButtonWithTitle:info.title.string];
     }
     
     [self.attributionSheet addButtonWithTitle:NSLocalizedStringWithDefaultValue(@"MAP_FEEDBACK", nil, nil, @"Improve This Map", @"Action in attribution sheet")];
