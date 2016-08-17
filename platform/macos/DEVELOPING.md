@@ -10,7 +10,7 @@ The Mapbox macOS SDK and the macosapp demo application run on macOS 10.10.0 and 
 
 1. [Install core dependencies](../../INSTALL.md).
 1. Run `make xproj`.
-1. Switch to the “dynamic” or “macosapp” scheme. The former builds just the Cocoa framework, while the latter also builds a Cocoa demo application based on it.
+1. Switch to the “dynamic (macos project)” or “macOS app” scheme. The former builds just the Cocoa framework, while the latter also builds a Cocoa demo application based on it.
 
 ## Contributing
 

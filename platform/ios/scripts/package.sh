@@ -71,12 +71,13 @@ SHORT_VERSION=${SEM_VERSION%-*}
 
 step "Building targets (build ${PROJ_VERSION}, version ${SEM_VERSION})…"
 
-SCHEME='dynamic'
+SCHEME='iOS dynamic'
 if [[ ${BUILD_DYNAMIC} == true && ${BUILD_STATIC} == true ]]; then
     SCHEME+='+static'
 elif [[ ${BUILD_STATIC} == true ]]; then
-    SCHEME='static'
+    SCHEME='iOS static'
 fi
+SCHEME+=' framework'
 
 xcodebuild \
     GCC_GENERATE_DEBUGGING_SYMBOLS=${GCC_GENERATE_DEBUGGING_SYMBOLS} \
@@ -86,8 +87,8 @@ xcodebuild \
     CURRENT_COMMIT_HASH=${HASH} \
     ONLY_ACTIVE_ARCH=NO \
     -derivedDataPath ${DERIVED_DATA} \
-    -workspace ./platform/ios/ios.xcworkspace \
-    -scheme ${SCHEME} \
+    -workspace ./platform/macos/macos.xcworkspace \
+    -scheme '${SCHEME}' \
     -configuration ${BUILDTYPE} \
     -sdk iphonesimulator \
     -jobs ${JOBS} | xcpretty
@@ -101,8 +102,8 @@ if [[ ${BUILD_FOR_DEVICE} == true ]]; then
         CURRENT_COMMIT_HASH=${HASH} \
         ONLY_ACTIVE_ARCH=NO \
         -derivedDataPath ${DERIVED_DATA} \
-        -workspace ./platform/ios/ios.xcworkspace \
-        -scheme ${SCHEME} \
+        -workspace ./platform/macos/macos.xcworkspace \
+        -scheme '${SCHEME}' \
         -configuration ${BUILDTYPE} \
         -sdk iphoneos \
         -jobs ${JOBS} | xcpretty
