@@ -4549,51 +4549,18 @@ mbgl::Duration MGLDurationInSeconds(NSTimeInterval duration)
     
     for (auto &pair : _annotationContextsByAnnotationTag)
     {
-        CGRect viewPort = CGRectInset(self.bounds,
-                                      -_largestAnnotationViewSize.width / 2.0 - MGLAnnotationUpdateViewportOutset.width / 2.0,
-                                      -_largestAnnotationViewSize.height / 2.0 - MGLAnnotationUpdateViewportOutset.width);
-        
         MGLAnnotationContext &annotationContext = pair.second;
-        MGLAnnotationView *annotationView = annotationContext.annotationView;
-
+        
         // Defer to the shape/polygon styling delegate methods
         if ([annotationContext.annotation isKindOfClass:[MGLMultiPoint class]])
         {
             continue;
         }
-
-        if (!annotationView)
-        {
-            MGLAnnotationView *annotationView = [self annotationViewForAnnotation:annotationContext.annotation];
-            if (annotationView)
-            {
-                // If the annotation view has no superview it means it was never used before so add it
-                if (!annotationView.superview)
-                {
-                    [self.glView addSubview:annotationView];
-                }
-                
-                annotationView.mapView = self;
-                annotationView.center = [self convertCoordinate:annotationContext.annotation.coordinate toPointToView:self];
-                annotationContext.annotationView = annotationView;
-            }
-        }
-       
-        // if there is no annotationView at this point then we are dealing with a sprite backed annotation
-        if (!annotationView)
-        {
-            continue;
-        }
         
-        bool annotationViewIsVisible = CGRectContainsRect(viewPort, annotationView.frame);
-        if (!annotationViewIsVisible)
-        {
-            [self enqueueAnnotationViewForAnnotationContext:annotationContext];
-        }
-        else
-        {
-            annotationView.center = [self convertCoordinate:annotationContext.annotation.coordinate toPointToView:self];
-        }
+        // TODO: add back logic to use reuse queue when there is a working solution for querying point annotation on the map
+
+        MGLAnnotationView *annotationView = annotationContext.annotationView;
+        annotationView.center = [self convertCoordinate:annotationContext.annotation.coordinate toPointToView:self];
     }
     
     [CATransaction commit];
@@ -4602,7 +4569,7 @@ mbgl::Duration MGLDurationInSeconds(NSTimeInterval duration)
 - (void)enqueueAnnotationViewForAnnotationContext:(MGLAnnotationContext &)annotationContext
 {
     MGLAnnotationView *annotationView = annotationContext.annotationView;
-    
+   
     if (!annotationView) return;
     
     annotationView.annotation = nil;
