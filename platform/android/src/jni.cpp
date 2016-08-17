@@ -1179,7 +1179,7 @@ void nativeRemoveLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapViewPtr, j
     }
 }
 
-jni::jobject* nativeGetSource(JNIEnv *env, jni::jobject* obj, jlong nativeMapViewPtr, jni::jstring* sourceId) {
+jni::jobject* nativeGetSource(JNIEnv *env, jni::jobject* obj, jni::jlong nativeMapViewPtr, jni::jstring* sourceId) {
     mbgl::Log::Debug(mbgl::Event::JNI, "nativeGetSource");
 
     assert(env);
@@ -1199,7 +1199,7 @@ jni::jobject* nativeGetSource(JNIEnv *env, jni::jobject* obj, jlong nativeMapVie
     return createJavaSourcePeer(*env, nativeMapView->getMap(), *coreSource);
 }
 
-void nativeAddSource(JNIEnv *env, jni::jobject* obj, jlong nativeMapViewPtr, jlong nativeSourcePtr) {
+void nativeAddSource(JNIEnv *env, jni::jobject* obj, jni::jlong nativeMapViewPtr, jni::jlong nativeSourcePtr) {
     mbgl::Log::Debug(mbgl::Event::JNI, "nativeAddSource");
     assert(nativeMapViewPtr != 0);
     assert(nativeSourcePtr != 0);
