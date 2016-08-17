@@ -3202,25 +3202,6 @@ mbgl::Duration MGLDurationInSeconds(NSTimeInterval duration)
     return reusableView;
 }
 
-- (MGLAnnotationView *)annotationViewAtPoint:(CGPoint)point
-{
-    std::vector<MGLAnnotationTag> annotationTags = [self annotationTagsInRect:self.bounds];
-    
-    for(auto const& annotationTag: annotationTags)
-    {
-        auto &annotationContext = _annotationContextsByAnnotationTag[annotationTag];
-        MGLAnnotationView *annotationView = annotationContext.annotationView;
-        CGPoint convertedPoint = [self convertPoint:point toView:annotationView];
-        
-        if ([annotationView pointInside:convertedPoint withEvent:nil])
-        {
-            return annotationView;
-        }
-    }
-    
-    return nil;
-}
-
 /**
     Returns the tag of the annotation at the given point in the view.
 
