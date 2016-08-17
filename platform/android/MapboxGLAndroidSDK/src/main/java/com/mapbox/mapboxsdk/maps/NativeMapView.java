@@ -494,6 +494,10 @@ final class NativeMapView {
         nativeRemoveLayer(mNativeMapViewPtr, layerId);
     }
 
+    public Source getSource(@NonNull String sourceId) {
+        return nativeGetSource(mNativeMapViewPtr, sourceId);
+    }
+
     public void addSource(@NonNull Source source) {
         nativeAddSource(mNativeMapViewPtr, source.getId(), source);
     }
@@ -708,9 +712,11 @@ final class NativeMapView {
 
     private native void nativeRemoveLayer(long nativeMapViewPtr, String layerId) throws NoSuchLayerException;
 
-    private native void nativeAddSource(long mNativeMapViewPtr, String id, Source source);
+    private native Source nativeGetSource(long nativeMapViewPtr, String sourceId);
 
-    private native void nativeRemoveSource(long mNativeMapViewPtr, String sourceId) throws NoSuchSourceException;
+    private native void nativeAddSource(long nativeMapViewPtr, String id, Source source);
+
+    private native void nativeRemoveSource(long nativeMapViewPtr, String sourceId) throws NoSuchSourceException;
 
     private native void nativeUpdatePolygon(long nativeMapViewPtr, long polygonId, Polygon polygon);
 
