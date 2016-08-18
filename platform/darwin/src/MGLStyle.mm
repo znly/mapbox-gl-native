@@ -46,6 +46,8 @@
 
 @implementation MGLStyle
 
+#pragma mark Default style URLs
+
 static_assert(mbgl::util::default_styles::currentVersion == MGLStyleDefaultVersion, "mbgl::util::default_styles::currentVersion and MGLStyleDefaultVersion disagree.");
 
 /// @param name The style’s marketing name, written in lower camelCase.
@@ -96,6 +98,8 @@ static NSURL *MGLStyleURL_emerald;
     return MGLStyleURL_emerald;
 }
 
+#pragma mark Metadata
+
 - (NSString *)name {
     return @(self.mapView.mbglMap->getStyleName().c_str());
 }
@@ -103,6 +107,46 @@ static NSURL *MGLStyleURL_emerald;
 - (NSURL *)URL {
     return [NSURL URLWithString:@(self.mapView.mbglMap->getStyleURL().c_str())];
 }
+
+#pragma mark Sources
+
+- (MGLSource *)sourceWithIdentifier:(NSString *)identifier
+{
+    auto mbglSource = self.mapView.mbglMap->getSource(identifier.UTF8String);
+    if (!mbglSource) {
+        return nil;
+    }
+
+    // TODO: Fill in options specific to the respective source classes
+    // https://github.com/mapbox/mapbox-gl-native/issues/6584
+    MGLSource *source;
+    if (mbglSource->is<mbgl::style::VectorSource>()) {
+        source = [[MGLVectorSource alloc] initWithIdentifier:identifier];
+    } else if (mbglSource->is<mbgl::style::GeoJSONSource>()) {
+        source = [[MGLGeoJSONSource alloc] initWithIdentifier:identifier];
+    } else if (mbglSource->is<mbgl::style::RasterSource>()) {
+        source = [[MGLRasterSource alloc] initWithIdentifier:identifier];
+    } else {
+        NSAssert(NO, @"Unrecognized source type");
+        return nil;
+    }
+
+    source.source = mbglSource;
+
+    return source;
+}
+
+- (void)addSource:(MGLSource *)source
+{
+    self.mapView.mbglMap->addSource(source.mbglSource);
+}
+
+- (void)removeSource:(MGLSource *)source
+{
+    self.mapView.mbglMap->removeSource(source.identifier.UTF8String);
+}
+
+#pragma mark Style layers
 
 - (MGLStyleLayer *)layerWithIdentifier:(NSString *)identifier
 {
@@ -137,32 +181,6 @@ static NSURL *MGLStyleURL_emerald;
     styleLayer.layer = mbglLayer;
 
     return styleLayer;
-}
-
-- (MGLSource *)sourceWithIdentifier:(NSString *)identifier
-{
-    auto mbglSource = self.mapView.mbglMap->getSource(identifier.UTF8String);
-    if (!mbglSource) {
-        return nil;
-    }
-
-    // TODO: Fill in options specific to the respective source classes
-    // https://github.com/mapbox/mapbox-gl-native/issues/6584
-    MGLSource *source;
-    if (mbglSource->is<mbgl::style::VectorSource>()) {
-        source = [[MGLVectorSource alloc] initWithIdentifier:identifier];
-    } else if (mbglSource->is<mbgl::style::GeoJSONSource>()) {
-        source = [[MGLGeoJSONSource alloc] initWithIdentifier:identifier];
-    } else if (mbglSource->is<mbgl::style::RasterSource>()) {
-        source = [[MGLRasterSource alloc] initWithIdentifier:identifier];
-    } else {
-        NSAssert(NO, @"Unrecognized source type");
-        return nil;
-    }
-
-    source.source = mbglSource;
-
-    return source;
 }
 
 - (void)removeLayer:(MGLStyleLayer *)layer
@@ -203,15 +221,7 @@ static NSURL *MGLStyleURL_emerald;
     self.mapView.mbglMap->addLayer(std::unique_ptr<mbgl::style::Layer>(layer.layer), belowLayerId);
 }
 
-- (void)addSource:(MGLSource *)source
-{
-    self.mapView.mbglMap->addSource(source.mbglSource);
-}
-
-- (void)removeSource:(MGLSource *)source
-{
-    self.mapView.mbglMap->removeSource(source.identifier.UTF8String);
-}
+#pragma mark Style classes
 
 - (NS_ARRAY_OF(NSString *) *)styleClasses
 {
@@ -265,6 +275,8 @@ static NSURL *MGLStyleURL_emerald;
         self.mapView.mbglMap->removeClass([styleClass UTF8String]);
     }
 }
+
+#pragma mark Style images
 
 - (void)setImage:(MGLImage *)image forName:(NSString *)name
 {
