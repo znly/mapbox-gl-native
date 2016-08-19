@@ -40,8 +40,10 @@
 #endif
 
 @interface MGLStyle()
-@property (nonatomic, weak) MGLMapView *mapView;
+
+@property (nonatomic, readwrite, weak) MGLMapView *mapView;
 @property (readonly, copy, nullable) NSURL *URL;
+
 @end
 
 @implementation MGLStyle
@@ -98,14 +100,21 @@ static NSURL *MGLStyleURL_emerald;
     return MGLStyleURL_emerald;
 }
 
-#pragma mark Metadata
+#pragma mark -
 
-- (NSString *)name {
-    return @(self.mapView.mbglMap->getStyleName().c_str());
+- (instancetype)initWithMapView:(MGLMapView *)mapView {
+    if (self = [super init]) {
+        _mapView = mapView;
+    }
+    return self;
 }
 
 - (NSURL *)URL {
     return [NSURL URLWithString:@(self.mapView.mbglMap->getStyleURL().c_str())];
+}
+
+- (NSString *)name {
+    return @(self.mapView.mbglMap->getStyleName().c_str());
 }
 
 #pragma mark Sources
@@ -127,8 +136,7 @@ static NSURL *MGLStyleURL_emerald;
     } else if (mbglSource->is<mbgl::style::RasterSource>()) {
         source = [[MGLRasterSource alloc] initWithIdentifier:identifier];
     } else {
-        NSAssert(NO, @"Unrecognized source type");
-        return nil;
+        source = [[MGLSource alloc] initWithIdentifier:identifier];
     }
 
     source.source = mbglSource;
@@ -255,7 +263,9 @@ static NSURL *MGLStyleURL_emerald;
 
 - (void)removeLayer:(MGLStyleLayer *)layer
 {
+    [self willChangeValueForKey:@"layers"];
     self.mapView.mbglMap->removeLayer(layer.identifier.UTF8String);
+    [self didChangeValueForKey:@"layers"];
 }
 
 - (void)addLayer:(MGLStyleLayer *)layer
@@ -267,7 +277,9 @@ static NSURL *MGLStyleURL_emerald;
          layer];
     }
 
+    [self willChangeValueForKey:@"layers"];
     self.mapView.mbglMap->addLayer(std::unique_ptr<mbgl::style::Layer>(layer.layer));
+    [self didChangeValueForKey:@"layers"];
 }
 
 - (void)insertLayer:(MGLStyleLayer *)layer belowLayer:(MGLStyleLayer *)otherLayer
@@ -287,8 +299,10 @@ static NSURL *MGLStyleURL_emerald;
          otherLayer];
     }
 
-    const mbgl::optional<std::string> belowLayerId{otherLayer.identifier.UTF8String};
+    [self willChangeValueForKey:@"layers"];
+    const mbgl::optional<std::string> belowLayerId { otherLayer.identifier.UTF8String };
     self.mapView.mbglMap->addLayer(std::unique_ptr<mbgl::style::Layer>(layer.layer), belowLayerId);
+    [self didChangeValueForKey:@"layers"];
 }
 
 #pragma mark Style classes

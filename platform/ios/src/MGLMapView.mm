@@ -230,6 +230,9 @@ public:
 @property (nonatomic, readwrite) UIButton *attributionButton;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(NSLayoutConstraint *) *attributionButtonConstraints;
 @property (nonatomic) UIActionSheet *attributionSheet;
+
+@property (nonatomic, readwrite) MGLStyle *style;
+
 @property (nonatomic) UIPanGestureRecognizer *pan;
 @property (nonatomic) UIPinchGestureRecognizer *pinch;
 @property (nonatomic) UIRotationGestureRecognizer *rotate;
@@ -354,6 +357,7 @@ public:
 
     styleURL = styleURL.mgl_URLByStandardizingScheme;
     _mbglMap->setStyleURL([[styleURL absoluteString] UTF8String]);
+    self.style = [[MGLStyle alloc] initWithMapView:self];
 }
 
 - (IBAction)reloadStyle:(__unused id)sender {
@@ -605,13 +609,6 @@ public:
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
-}
-
-- (MGLStyle *)style
-{
-    MGLStyle *style = [[MGLStyle alloc] init];
-    style.mapView = self;
-    return style;
 }
 
 - (void)reachabilityChanged:(NSNotification *)notification
@@ -4505,6 +4502,7 @@ public:
         }
         case mbgl::MapChangeWillStartLoadingMap:
         {
+            [self.style willChangeValueForKey:@"layers"];
             if ([self.delegate respondsToSelector:@selector(mapViewWillStartLoadingMap:)])
             {
                 [self.delegate mapViewWillStartLoadingMap:self];
@@ -4513,6 +4511,7 @@ public:
         }
         case mbgl::MapChangeDidFinishLoadingMap:
         {
+            [self.style didChangeValueForKey:@"layers"];
             if ([self.delegate respondsToSelector:@selector(mapViewDidFinishLoadingMap:)])
             {
                 [self.delegate mapViewDidFinishLoadingMap:self];
