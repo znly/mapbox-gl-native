@@ -25,4 +25,9 @@
     return nil;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p; identifier = %@>",
+            NSStringFromClass([self class]), (void *)self, self.identifier];
+}
+
 @end

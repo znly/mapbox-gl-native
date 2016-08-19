@@ -46,4 +46,10 @@ static NSString *MGLVectorSourceType   = @"vector";
     return std::move(source);
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<%@: %p; identifier = %@; URL = %@; tileSet = %@>",
+            NSStringFromClass([self class]), (void *)self, self.identifier, self.URL, self.tileSet];
+}
+
 @end
