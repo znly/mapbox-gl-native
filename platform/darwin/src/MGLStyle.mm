@@ -148,13 +148,77 @@ static NSURL *MGLStyleURL_emerald;
 
 #pragma mark Style layers
 
-- (MGLStyleLayer *)layerWithIdentifier:(NSString *)identifier
+- (NSMutableArray<MGLStyleLayer *> *)layers
 {
-    auto mbglLayer = self.mapView.mbglMap->getLayer(identifier.UTF8String);
-    if (!mbglLayer) {
+    auto layers = self.mapView.mbglMap->getLayers();
+    NSMutableArray *styleLayers = [NSMutableArray arrayWithCapacity:layers.size()];
+    for (auto &layer : layers) {
+        MGLStyleLayer *styleLayer = [self layerFromMBGLLayer:layer];
+        [styleLayers addObject:styleLayer];
+    }
+    return styleLayers;
+}
+
+- (void)setLayers:(NSMutableArray<MGLStyleLayer *> *)layers {
+    std::vector<mbgl::style::Layer *> rawLayers;
+    rawLayers.reserve(layers.count);
+    for (MGLStyleLayer *layer in layers) {
+        rawLayers.push_back(layer.layer);
+    }
+    self.mapView.mbglMap->setLayers(rawLayers);
+}
+
+- (NSUInteger)countOfLayers
+{
+    return self.mapView.mbglMap->getLayers().size();
+}
+
+- (MGLStyleLayer *)objectInLayersAtIndex:(NSUInteger)index
+{
+    auto layers = self.mapView.mbglMap->getLayers();
+    auto layer = layers.at(index);
+    if (layer) {
+        return [self layerFromMBGLLayer:layer];
+    } else {
+        [NSException raise:NSRangeException
+                    format:@"No style layer at index %lu", (unsigned long)index];
         return nil;
     }
+}
 
+- (void)getLayers:(MGLStyleLayer **)buffer range:(NSRange)inRange
+{
+    auto layers = self.mapView.mbglMap->getLayers();
+    NSUInteger i = 0;
+    for (auto layer = *(layers.begin() + inRange.location); i < inRange.length; ++layer, ++i) {
+        MGLStyleLayer *styleLayer = [self layerFromMBGLLayer:layer];
+        buffer[i] = styleLayer;
+    }
+}
+
+- (void)insertObject:(MGLStyleLayer *)styleLayer inLayersAtIndex:(NSUInteger)index
+{
+    auto layers = self.mapView.mbglMap->getLayers();
+    if (index == layers.size()) {
+        [self addLayer:styleLayer];
+    } else {
+        auto layerAbove = layers.at(index);
+        self.mapView.mbglMap->addLayer(std::unique_ptr<mbgl::style::Layer>(styleLayer.layer), layerAbove->getID());
+    }
+}
+
+- (void)removeObjectFromLayersAtIndex:(NSUInteger)index
+{
+    auto layers = self.mapView.mbglMap->getLayers();
+    auto layer = layers.at(index);
+    self.mapView.mbglMap->removeLayer(layer->getID());
+}
+
+- (MGLStyleLayer *)layerFromMBGLLayer:(mbgl::style::Layer *)mbglLayer
+{
+    NSParameterAssert(mbglLayer);
+    
+    NSString *identifier = @(mbglLayer->getID().c_str());
     MGLStyleLayer *styleLayer;
     if (auto fillLayer = mbglLayer->as<mbgl::style::FillLayer>()) {
         MGLSource *source = [self sourceWithIdentifier:@(fillLayer->getSourceID().c_str())];
@@ -177,10 +241,16 @@ static NSURL *MGLStyleURL_emerald;
         NSAssert(NO, @"Unrecognized layer type");
         return nil;
     }
-
+    
     styleLayer.layer = mbglLayer;
-
+    
     return styleLayer;
+}
+
+- (MGLStyleLayer *)layerWithIdentifier:(NSString *)identifier
+{
+    auto mbglLayer = self.mapView.mbglMap->getLayer(identifier.UTF8String);
+    return mbglLayer ? [self layerFromMBGLLayer:mbglLayer] : nil;
 }
 
 - (void)removeLayer:(MGLStyleLayer *)layer
