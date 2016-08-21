@@ -551,14 +551,6 @@ public:
 
 #pragma mark Style
 
-+ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingStyle {
-    return [NSSet setWithObject:@"styleURL"];
-}
-
-+ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingStyleURL {
-    return [NSSet setWithObject:@"style"];
-}
-
 - (nonnull NSURL *)styleURL {
     NSString *styleURLString = @(_mbglMap->getStyleURL().c_str()).mgl_stringOrNilIfEmpty;
     return styleURLString ? [NSURL URLWithString:styleURLString] : [MGLStyle streetsStyleURLWithVersion:MGLStyleDefaultVersion];
@@ -568,7 +560,9 @@ public:
     if (_isTargetingInterfaceBuilder) {
         return;
     }
-
+    
+    self.style = [[MGLStyle alloc] initWithMapView:self];
+    
     // Default to Streets.
     if (!styleURL) {
         // An access token is required to load any default style, including
@@ -581,7 +575,6 @@ public:
 
     styleURL = styleURL.mgl_URLByStandardizingScheme;
     _mbglMap->setStyleURL(styleURL.absoluteString.UTF8String);
-    self.style = [[MGLStyle alloc] initWithMapView:self];
 }
 
 - (IBAction)reloadStyle:(__unused id)sender {
@@ -833,7 +826,6 @@ public:
         }
         case mbgl::MapChangeWillStartLoadingMap:
         {
-            [self.style willChangeValueForKey:@"layers"];
             if ([self.delegate respondsToSelector:@selector(mapViewWillStartLoadingMap:)]) {
                 [self.delegate mapViewWillStartLoadingMap:self];
             }
@@ -841,6 +833,7 @@ public:
         }
         case mbgl::MapChangeDidFinishLoadingMap:
         {
+            [self.style willChangeValueForKey:@"layers"];
             [self.style didChangeValueForKey:@"layers"];
             if ([self.delegate respondsToSelector:@selector(mapViewDidFinishLoadingMap:)]) {
                 [self.delegate mapViewDidFinishLoadingMap:self];

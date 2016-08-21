@@ -334,13 +334,9 @@ public:
     return self;
 }
 
-+ (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingStyle {
-    return [NSSet setWithObject:@"styleURL"];
-}
-
 + (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingStyleURL
 {
-    return [NSSet setWithObjects:@"styleURL__", @"style", nil];
+    return [NSSet setWithObjects:@"styleURL__", nil];
 }
 
 - (nonnull NSURL *)styleURL
@@ -353,6 +349,8 @@ public:
 - (void)setStyleURL:(nullable NSURL *)styleURL
 {
     if (_isTargetingInterfaceBuilder) return;
+    
+    self.style = [[MGLStyle alloc] initWithMapView:self];
 
     if ( ! styleURL)
     {
@@ -361,7 +359,6 @@ public:
 
     styleURL = styleURL.mgl_URLByStandardizingScheme;
     _mbglMap->setStyleURL([[styleURL absoluteString] UTF8String]);
-    self.style = [[MGLStyle alloc] initWithMapView:self];
 }
 
 - (IBAction)reloadStyle:(__unused id)sender {
@@ -4506,7 +4503,6 @@ public:
         }
         case mbgl::MapChangeWillStartLoadingMap:
         {
-            [self.style willChangeValueForKey:@"layers"];
             if ([self.delegate respondsToSelector:@selector(mapViewWillStartLoadingMap:)])
             {
                 [self.delegate mapViewWillStartLoadingMap:self];
@@ -4515,6 +4511,7 @@ public:
         }
         case mbgl::MapChangeDidFinishLoadingMap:
         {
+            [self.style willChangeValueForKey:@"layers"];
             [self.style didChangeValueForKey:@"layers"];
             if ([self.delegate respondsToSelector:@selector(mapViewDidFinishLoadingMap:)])
             {
