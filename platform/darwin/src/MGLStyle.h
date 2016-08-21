@@ -200,6 +200,10 @@ static const NSInteger MGLStyleDefaultVersion = 9;
 
 #pragma mark Managing Style Layers
 
+/**
+ The layers included in the style, arranged according to their front-to-back
+ ordering on the screen.
+ */
 @property (nonatomic, strong) NS_MUTABLE_ARRAY_OF(MGLStyleLayer *) *layers;
 
 /**

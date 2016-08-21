@@ -160,8 +160,8 @@ static NSURL *MGLStyleURL_emerald;
 {
     auto layers = self.mapView.mbglMap->getLayers();
     NSMutableArray *styleLayers = [NSMutableArray arrayWithCapacity:layers.size()];
-    for (auto &layer : layers) {
-        MGLStyleLayer *styleLayer = [self layerFromMBGLLayer:layer];
+    for (auto layer = layers.rbegin(); layer != layers.rend(); ++layer) {
+        MGLStyleLayer *styleLayer = [self layerFromMBGLLayer:*layer];
         [styleLayers addObject:styleLayer];
     }
     return styleLayers;
@@ -170,7 +170,7 @@ static NSURL *MGLStyleURL_emerald;
 - (void)setLayers:(NS_MUTABLE_ARRAY_OF(MGLStyleLayer *) *)layers {
     std::vector<mbgl::style::Layer *> rawLayers;
     rawLayers.reserve(layers.count);
-    for (MGLStyleLayer *layer in layers) {
+    for (MGLStyleLayer *layer in layers.reverseObjectEnumerator) {
         rawLayers.push_back(layer.layer);
     }
     self.mapView.mbglMap->setLayers(rawLayers);
@@ -184,21 +184,21 @@ static NSURL *MGLStyleURL_emerald;
 - (MGLStyleLayer *)objectInLayersAtIndex:(NSUInteger)index
 {
     auto layers = self.mapView.mbglMap->getLayers();
-    auto layer = layers.at(index);
-    if (layer) {
-        return [self layerFromMBGLLayer:layer];
-    } else {
+    if (index > layers.size() - 1) {
         [NSException raise:NSRangeException
                     format:@"No style layer at index %lu", (unsigned long)index];
         return nil;
     }
+    
+    auto layer = layers.at(layers.size() - 1 - index);
+    return [self layerFromMBGLLayer:layer];
 }
 
 - (void)getLayers:(MGLStyleLayer **)buffer range:(NSRange)inRange
 {
     auto layers = self.mapView.mbglMap->getLayers();
     NSUInteger i = 0;
-    for (auto layer = *(layers.begin() + inRange.location); i < inRange.length; ++layer, ++i) {
+    for (auto layer = *(layers.rbegin() + inRange.location); i < inRange.length; ++layer, ++i) {
         MGLStyleLayer *styleLayer = [self layerFromMBGLLayer:layer];
         buffer[i] = styleLayer;
     }
@@ -210,7 +210,7 @@ static NSURL *MGLStyleURL_emerald;
     if (index == layers.size()) {
         [self addLayer:styleLayer];
     } else {
-        auto layerAbove = layers.at(index);
+        auto layerAbove = layers.at(layers.size() - 1 - index);
         self.mapView.mbglMap->addLayer(std::unique_ptr<mbgl::style::Layer>(styleLayer.layer), layerAbove->getID());
     }
 }
@@ -218,7 +218,7 @@ static NSURL *MGLStyleURL_emerald;
 - (void)removeObjectFromLayersAtIndex:(NSUInteger)index
 {
     auto layers = self.mapView.mbglMap->getLayers();
-    auto layer = layers.at(index);
+    auto layer = layers.at(layers.size() - 1 - index);
     self.mapView.mbglMap->removeLayer(layer->getID());
 }
 
