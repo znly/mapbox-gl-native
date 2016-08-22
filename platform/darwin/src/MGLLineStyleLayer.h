@@ -6,20 +6,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** The display of line endings. */
 typedef NS_ENUM(NSUInteger, MGLLineStyleLayerLineCap) {
+#warning documentation missing.
     MGLLineStyleLayerLineCapButt,
+#warning documentation missing.
     MGLLineStyleLayerLineCapRound,
+#warning documentation missing.
     MGLLineStyleLayerLineCapSquare,
 };
 
+/** The display of lines when joining. */
 typedef NS_ENUM(NSUInteger, MGLLineStyleLayerLineJoin) {
+#warning documentation missing.
     MGLLineStyleLayerLineJoinBevel,
+#warning documentation missing.
     MGLLineStyleLayerLineJoinRound,
+#warning documentation missing.
     MGLLineStyleLayerLineJoinMiter,
 };
 
+/** Control whether the translation is relative to the map (north) or viewport (screen) */
 typedef NS_ENUM(NSUInteger, MGLLineStyleLayerLineTranslateAnchor) {
+#warning documentation missing.
     MGLLineStyleLayerLineTranslateAnchorMap,
+#warning documentation missing.
     MGLLineStyleLayerLineTranslateAnchorViewport,
 };
 

@@ -1,0 +1,13 @@
+{
+  "layout_symbol": {
+    "text-transform": {
+      "doc": "Specifies how to capitalize text."
+    },
+    "symbol-placement": {
+      "docs": [
+        "Documentation for values[0]",
+        "Documentation for values[1]"
+      ]
+    }
+  }
+}

@@ -6,64 +6,109 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** Label placement relative to its geometry. `line` can only be used on LineStrings and Polygons. */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerSymbolPlacement) {
+    /**
+     Documentation for values[0]
+     */
     MGLSymbolStyleLayerSymbolPlacementPoint,
+    /**
+     Documentation for values[1]
+     */
     MGLSymbolStyleLayerSymbolPlacementLine,
 };
 
+/** Orientation of icon when map is rotated. */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerIconRotationAlignment) {
+#warning documentation missing.
     MGLSymbolStyleLayerIconRotationAlignmentMap,
+#warning documentation missing.
     MGLSymbolStyleLayerIconRotationAlignmentViewport,
 };
 
+/** Position and scale an icon by the its corresponding text. */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerIconTextFit) {
+#warning documentation missing.
     MGLSymbolStyleLayerIconTextFitNone,
+#warning documentation missing.
     MGLSymbolStyleLayerIconTextFitBoth,
+#warning documentation missing.
     MGLSymbolStyleLayerIconTextFitWidth,
+#warning documentation missing.
     MGLSymbolStyleLayerIconTextFitHeight,
 };
 
+/** Aligns text to the plane of the `viewport` or the `map` when the map is pitched. Matches `text-rotation-alignment` if unspecified. */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerTextPitchAlignment) {
+#warning documentation missing.
     MGLSymbolStyleLayerTextPitchAlignmentMap,
+#warning documentation missing.
     MGLSymbolStyleLayerTextPitchAlignmentViewport,
 };
 
+/** Orientation of text when map is rotated. */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerTextRotationAlignment) {
+#warning documentation missing.
     MGLSymbolStyleLayerTextRotationAlignmentMap,
+#warning documentation missing.
     MGLSymbolStyleLayerTextRotationAlignmentViewport,
 };
 
+/** Text justification options. */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerTextJustify) {
+#warning documentation missing.
     MGLSymbolStyleLayerTextJustifyLeft,
+#warning documentation missing.
     MGLSymbolStyleLayerTextJustifyCenter,
+#warning documentation missing.
     MGLSymbolStyleLayerTextJustifyRight,
 };
 
+/** Part of the text placed closest to the anchor. */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerTextAnchor) {
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorCenter,
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorLeft,
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorRight,
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorTop,
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorBottom,
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorTopLeft,
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorTopRight,
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorBottomLeft,
+#warning documentation missing.
     MGLSymbolStyleLayerTextAnchorBottomRight,
 };
 
+/** Specifies how to capitalize text. */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerTextTransform) {
+#warning documentation missing.
     MGLSymbolStyleLayerTextTransformNone,
+#warning documentation missing.
     MGLSymbolStyleLayerTextTransformUppercase,
+#warning documentation missing.
     MGLSymbolStyleLayerTextTransformLowercase,
 };
 
+/** Control whether the translation is relative to the map (north) or viewport (screen). */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerIconTranslateAnchor) {
+#warning documentation missing.
     MGLSymbolStyleLayerIconTranslateAnchorMap,
+#warning documentation missing.
     MGLSymbolStyleLayerIconTranslateAnchorViewport,
 };
 
+/** Control whether the translation is relative to the map (north) or viewport (screen). */
 typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerTextTranslateAnchor) {
+#warning documentation missing.
     MGLSymbolStyleLayerTextTranslateAnchorMap,
+#warning documentation missing.
     MGLSymbolStyleLayerTextTranslateAnchorViewport,
 };
 
@@ -343,7 +388,7 @@ typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerTextTranslateAnchor) {
 @property (nonatomic, nullable) id <MGLStyleAttributeValue> textKeepUpright;
 
 /**
- Specifies how to capitalize text, similar to the CSS `text-transform` property.
+ Specifies how to capitalize text.
  
  If this property is set to `nil`, the layer uses an implicit default value of `MGLSymbolStyleLayerTextTransformNone`.
  

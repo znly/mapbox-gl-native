@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const ejs = require('ejs');
-const spec = require('mapbox-gl-style-spec').latest;
+const spec = override(require('mapbox-gl-style-spec').latest, require('./style-spec-overrides-v8.json'));
 
 const prefix = 'MGL';
 const suffix = 'StyleLayer';
@@ -96,6 +96,16 @@ global.testArrayImplementation = function (property) {
             throw new Error(`unknown array type for ${property.name}`);
     }
 };
+
+global.enumDoc = function (property, value) {
+    if ('docs' in property) {
+        return `    /**
+     ${property.docs[property.values.indexOf(value)]}
+     */`;
+    } else {
+        return "#warning documentation missing.";
+    }
+}
 
 global.propertyDoc = function (property, layerType) {
     let doc = property.doc.replace(/`(.+?)`/g, function (m, symbol, offset, str) {
@@ -293,6 +303,21 @@ global.convertedType = function(property) {
         default:
             throw new Error(`unknown array type for ${property.name}`);
     }
+}
+
+global.isObjectNotArray = function(object) {
+    return (typeof object === 'object' && !Array.isArray(object));
+}
+
+global.override = function(base, override) {
+    Object.keys(override).forEach(function(key) {
+    if (isObjectNotArray(base[key]) && isObjectNotArray(override[key])) {
+      override(base[key], override[key]);
+    } else {
+      base[key] = override[key];
+    }
+  });
+  return base;
 }
 
 const layerH = ejs.compile(fs.readFileSync('platform/darwin/src/MGLStyleLayer.h.ejs', 'utf8'), { strict: true });

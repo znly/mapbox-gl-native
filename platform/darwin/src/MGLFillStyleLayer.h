@@ -6,8 +6,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** Control whether the translation is relative to the map (north) or viewport (screen) */
 typedef NS_ENUM(NSUInteger, MGLFillStyleLayerFillTranslateAnchor) {
+#warning documentation missing.
     MGLFillStyleLayerFillTranslateAnchorMap,
+#warning documentation missing.
     MGLFillStyleLayerFillTranslateAnchorViewport,
 };
 

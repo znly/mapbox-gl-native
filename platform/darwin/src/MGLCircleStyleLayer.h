@@ -6,13 +6,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/** Control whether the translation is relative to the map (north) or viewport (screen) */
 typedef NS_ENUM(NSUInteger, MGLCircleStyleLayerCircleTranslateAnchor) {
+#warning documentation missing.
     MGLCircleStyleLayerCircleTranslateAnchorMap,
+#warning documentation missing.
     MGLCircleStyleLayerCircleTranslateAnchorViewport,
 };
 
+/** Controls the scaling behavior of the circle when the map is pitched. The value `map` scales circles according to their apparent distance to the camera. The value `viewport` results in no pitch-related scaling. */
 typedef NS_ENUM(NSUInteger, MGLCircleStyleLayerCirclePitchScale) {
+#warning documentation missing.
     MGLCircleStyleLayerCirclePitchScaleMap,
+#warning documentation missing.
     MGLCircleStyleLayerCirclePitchScaleViewport,
 };
 
