@@ -25,8 +25,35 @@ struct Converter<Function<T>> {
             return Error { "function stops must be an array" };
         }
 
+        optional<std::string> property;
+        const auto propertyValue = objectMember(value, "property");
+        if (propertyValue) {
+            property = toString(*propertyValue);
+            if (!property) {
+                return Error { "function property must be a string" };
+            }
+        }
+
+        using Type = typename Function<T>::Type;
+
+        Type type = Type::Exponential;
+        const auto typeValue = objectMember(value, "type");
+        if (typeValue) {
+            optional<std::string> typeString = toString(*typeValue);
+            if (!typeString) {
+                return Error { "function type must be a string" };
+            } else if (*typeString == "interval") {
+                type = Type::Interval;
+            } else if (*typeString == "categorical") {
+                type = Type::Categorical;
+            } else if (*typeString != "exponential") {
+                return Error { "function type is invalid" };
+            }
+        }
+
         std::vector<std::pair<float, T>> stops;
-        for (std::size_t i = 0; i < arrayLength(*stopsValue); ++i) {
+        const std::size_t length = arrayLength(*stopsValue);
+        for (std::size_t i = 0; i < length; ++i) {
             const auto& stopValue = arrayMember(*stopsValue, i);
 
             if (!isArray(stopValue)) {
@@ -52,7 +79,7 @@ struct Converter<Function<T>> {
 
         auto baseValue = objectMember(value, "base");
         if (!baseValue) {
-            return Function<T>(stops, 1.0f);
+            return Function<T>(stops, 1.0f, type);
         }
 
         optional<float> base = toNumber(*baseValue);
@@ -60,7 +87,7 @@ struct Converter<Function<T>> {
             return Error { "function base must be a number"};
         }
 
-        return Function<T>(stops, *base);
+        return Function<T>(stops, *base, type);
     }
 };
 
