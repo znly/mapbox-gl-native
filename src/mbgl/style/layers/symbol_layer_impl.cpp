@@ -36,6 +36,7 @@ std::unique_ptr<Bucket> SymbolLayer::Impl::createBucket(BucketParameters& parame
 
     CalculationParameters p(parameters.tileID.overscaledZ);
     bucket->layout.symbolPlacement.calculate(p);
+    auto textPitchAlignmentFallback = bucket->layout.textRotationAlignment.value;
     if (bucket->layout.symbolPlacement.value == SymbolPlacementType::Line) {
         bucket->layout.iconRotationAlignment.value = AlignmentType::Map;
         bucket->layout.textRotationAlignment.value = AlignmentType::Map;
@@ -43,7 +44,7 @@ std::unique_ptr<Bucket> SymbolLayer::Impl::createBucket(BucketParameters& parame
 
     // If unspecified `text-pitch-alignment` inherits `text-rotation-alignment`
     if (bucket->layout.textPitchAlignment.value == AlignmentType::Undefined) {
-        bucket->layout.textPitchAlignment.value = bucket->layout.textRotationAlignment.value;
+        bucket->layout.textPitchAlignment.value = textPitchAlignmentFallback;
     };
 
     bucket->layout.recalculate(p);
