@@ -10,6 +10,13 @@ import java.net.URL;
 public class VectorSource extends Source {
 
     /**
+     * Internal use
+     */
+    public VectorSource(long nativePtr) {
+        super(nativePtr);
+    }
+
+    /**
      * Create a vector source from a remote url
      *
      * @param id  the source id

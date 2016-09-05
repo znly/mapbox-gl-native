@@ -1693,6 +1693,7 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     java::registerNatives(env);
     registerNativeLayers(env);
+    registerNativeSources(env);
 
     latLngClass = &jni::FindClass(env, "com/mapbox/mapboxsdk/geometry/LatLng");
     latLngClass = jni::NewGlobalRef(env, latLngClass).release();

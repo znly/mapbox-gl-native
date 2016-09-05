@@ -291,13 +291,13 @@ public class RuntimeStyleActivity extends AppCompatActivity {
             return;
         }
 
-        //Add a source
+        //Add an empty source
         mapboxMap.addSource(new GeoJsonSource("dynamic-park-source"));
 
         FillLayer layer = new FillLayer("dynamic-parks-layer", "dynamic-park-source");
         layer.setProperties(
-                fillColor(Color.RED),
-                fillOutlineColor(Color.BLUE),
+                fillColor(Color.GREEN),
+                fillOutlineColor(Color.GREEN),
                 fillOpacity(0.8f),
                 fillAntialias(true)
         );
@@ -324,6 +324,12 @@ public class RuntimeStyleActivity extends AppCompatActivity {
                 int park = counter < parks.getFeatures().size() - 1 ? counter : 0;
 
                 GeoJsonSource source = mapboxMap.getSourceAs("dynamic-park-source");
+
+                if (source == null) {
+                    Log.e(TAG, "Source not found");
+                    Toast.makeText(RuntimeStyleActivity.this, "Source not found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 List<Feature> features = new ArrayList<>();
                 features.add(parks.getFeatures().get(park));

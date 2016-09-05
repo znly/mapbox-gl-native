@@ -10,6 +10,13 @@ import java.net.URL;
 public class RasterSource extends Source {
     public static final int DEFAULT_TILE_SIZE = 512;
 
+    /**
+     * Internal use
+     */
+    public RasterSource(long nativePtr) {
+        super(nativePtr);
+    }
+
     public RasterSource(String id, URL url) {
         this(id, url.toExternalForm());
     }

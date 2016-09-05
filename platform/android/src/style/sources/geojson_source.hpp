@@ -16,7 +16,7 @@ public:
 
     static void registerNative(jni::JNIEnv&);
 
-    GeoJSONSource(jni::JNIEnv&, jni::String);
+    GeoJSONSource(jni::JNIEnv&, jni::String, jni::Object<>);
 
     GeoJSONSource(mbgl::Map&, mbgl::style::GeoJSONSource&);
 

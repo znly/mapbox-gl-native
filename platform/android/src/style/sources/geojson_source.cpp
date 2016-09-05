@@ -1,15 +1,21 @@
 #include "geojson_source.hpp"
 
-#include <mbgl/style/conversion.hpp>
+#include "../android_conversion.hpp"
 #include "../conversion/geojson.hpp"
+#include <mbgl/style/conversion.hpp>
+#include <mbgl/style/conversion/geojson_options.hpp>
 
 #include <string>
 
 namespace mbgl {
 namespace android {
 
-    GeoJSONSource::GeoJSONSource(jni::JNIEnv& env, jni::String sourceId)
-        : Source(env, std::make_unique<mbgl::style::GeoJSONSource>(jni::Make<std::string>(env, sourceId))) {
+    GeoJSONSource::GeoJSONSource(jni::JNIEnv& env, jni::String sourceId, jni::Object<> options)
+        : Source(env, std::make_unique<mbgl::style::GeoJSONSource>(
+                jni::Make<std::string>(env, sourceId),
+                options ? *style::conversion::convert<style::GeoJSONOptions>(Value(env, options)) : style::GeoJSONOptions()
+                )
+            ) {
     }
 
     GeoJSONSource::GeoJSONSource(mbgl::Map& map, mbgl::style::GeoJSONSource& coreSource)
@@ -30,11 +36,17 @@ namespace android {
 
         //Update the core source
         source.as<mbgl::style::GeoJSONSource>()->GeoJSONSource::setGeoJSON(*converted);
+
+        //Repaint
+        updateStyle(false);
     }
 
     void GeoJSONSource::setURL(jni::JNIEnv& env, jni::String url) {
         //Update the core source
         source.as<mbgl::style::GeoJSONSource>()->GeoJSONSource::setURL(jni::Make<std::string>(env, url));
+
+        //Repaint
+        updateStyle(false);
     }
 
     jni::Class<GeoJSONSource> GeoJSONSource::javaClass;
@@ -53,11 +65,11 @@ namespace android {
         //Register the peer
         jni::RegisterNativePeer<GeoJSONSource>(
             env, GeoJSONSource::javaClass, "nativePtr",
-            std::make_unique<GeoJSONSource, JNIEnv&, jni::String>,
+            std::make_unique<GeoJSONSource, JNIEnv&, jni::String, jni::Object<>>,
             "initialize",
             "finalize",
             METHOD(&GeoJSONSource::setGeoJSON, "nativeSetGeoJson"),
-            METHOD(&GeoJSONSource::setGeoJSON, "nativeSetUrl")
+            METHOD(&GeoJSONSource::setURL, "nativeSetUrl")
         );
     }
 
