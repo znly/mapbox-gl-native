@@ -21,7 +21,7 @@ ApplicationWindow {
             MapParameter {
                 id: style
                 property var type: "style"
-                property var url: "mapbox://styles/mapbox/streets-v9"
+                property var url: "mapbox://styles/mapbox/streets-v10"
             },
             MapParameter {
                 id: waterPaint
@@ -262,7 +262,7 @@ ApplicationWindow {
                     checked: true
                     exclusiveGroup: group
                     onClicked: {
-                        style.url = "mapbox://styles/mapbox/streets-v9"
+                        style.url = "mapbox://styles/mapbox/streets-v10"
                         landColorDialog.color = "#e0ded8"
                         waterColorDialog.color = "#63c5ee"
                     }
@@ -271,7 +271,7 @@ ApplicationWindow {
                     text: "Dark"
                     exclusiveGroup: group
                     onClicked: {
-                        style.url = "mapbox://styles/mapbox/dark-v9"
+                        style.url = "mapbox://styles/mapbox/dark-v10"
                         landColorDialog.color = "#343332"
                         waterColorDialog.color = "#191a1a"
                     }
@@ -280,7 +280,7 @@ ApplicationWindow {
                     text: "Satellite"
                     exclusiveGroup: group
                     onClicked: {
-                        style.url = "mapbox://styles/mapbox/satellite-v9"
+                        style.url = "mapbox://styles/mapbox/satellite-v10"
                     }
                 }
             }
