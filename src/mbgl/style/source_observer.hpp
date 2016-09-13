@@ -18,6 +18,7 @@ public:
 
     virtual void onSourceLoaded(Source&) {}
     virtual void onSourceError(Source&, std::exception_ptr) {}
+    virtual void onSourceChanged(Source&){}
 
     virtual void onTileLoaded(Source&, const OverscaledTileID&, TileLoadState) {}
     virtual void onTileError(Source&, const OverscaledTileID&, std::exception_ptr) {}

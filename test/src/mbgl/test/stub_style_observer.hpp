@@ -33,6 +33,10 @@ public:
     void onSourceError(Source& source, std::exception_ptr error) override {
         if (sourceError) sourceError(source, error);
     }
+    
+    void onSourceChanged(Source& source) override {
+        if (sourceChanged) sourceChanged(source);
+    }
 
     void onTileLoaded(Source& source, const OverscaledTileID& tileID, TileLoadState loadState) override {
         if (tileLoaded) tileLoaded(source, tileID, loadState);
@@ -57,6 +61,7 @@ public:
     std::function<void (std::exception_ptr)> spriteError;
     std::function<void (Source&)> sourceLoaded;
     std::function<void (Source&, std::exception_ptr)> sourceError;
+    std::function<void (Source&)> sourceChanged;
     std::function<void (Source&, const OverscaledTileID&, TileLoadState)> tileLoaded;
     std::function<void (Source&, const OverscaledTileID&, std::exception_ptr)> tileError;
     std::function<void (Source&, const OverscaledTileID&)> tileUpdated;

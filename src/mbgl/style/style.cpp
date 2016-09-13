@@ -473,6 +473,7 @@ void Style::onSourceError(Source& source, std::exception_ptr error) {
     observer->onResourceError(error);
 }
 
+
 void Style::onTileLoaded(Source& source, const OverscaledTileID& tileID, TileLoadState loadState) {
     if (loadState == TileLoadState::First) {
         shouldReparsePartialTiles = true;
@@ -521,6 +522,11 @@ struct QueueSourceReloadVisitor {
         updateBatch.sourceIDs.insert(layer.getSourceID());
     }
 };
+
+void Style::onSourceChanged(Source& source){
+    updateBatch.sourceIDs.insert(source.getID());
+    observer->onUpdate(Update::Layout);
+}
 
 void Style::onLayerFilterChanged(Layer& layer) {
     layer.accept(QueueSourceReloadVisitor { updateBatch });

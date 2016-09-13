@@ -134,6 +134,7 @@ private:
     // SourceObserver implementation.
     void onSourceLoaded(Source&) override;
     void onSourceError(Source&, std::exception_ptr) override;
+    void onSourceChanged(Source&) override;
     void onTileLoaded(Source&, const OverscaledTileID&, TileLoadState) override;
     void onTileError(Source&, const OverscaledTileID&, std::exception_ptr) override;
     void onTileUpdated(Source&, const OverscaledTileID&) override;

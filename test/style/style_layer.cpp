@@ -1,5 +1,7 @@
 #include <mbgl/test/util.hpp>
+#include <mapbox/geojson.hpp>
 #include <mbgl/test/stub_layer_observer.hpp>
+#include <mbgl/test/stub_style_observer.hpp>
 #include <mbgl/style/layers/background_layer.hpp>
 #include <mbgl/style/layers/background_layer_impl.hpp>
 #include <mbgl/style/layers/circle_layer.hpp>
@@ -14,6 +16,8 @@
 #include <mbgl/style/layers/raster_layer_impl.hpp>
 #include <mbgl/style/layers/symbol_layer.hpp>
 #include <mbgl/style/layers/symbol_layer_impl.hpp>
+#include <mbgl/style/sources/geojson_source.hpp>
+#include <mbgl/style/sources/geojson_source_impl.hpp>
 #include <mbgl/util/color.hpp>
 
 using namespace mbgl;
@@ -267,4 +271,22 @@ TEST(Layer, Observer) {
     layoutPropertyChanged = false;
     layer->setLineCap(lineCap);
     EXPECT_FALSE(layoutPropertyChanged);
+}
+
+TEST(Source, Observer) {
+    GeoJSONOptions options;
+    auto source = std::make_unique<GeoJSONSource>("geojson-test", options);
+    StubStyleObserver observer;
+    source->baseImpl->setObserver(&observer);
+    
+    // Notifies observer on GeoJSON Source change.
+    bool sourceChanged = false;
+    observer.sourceChanged = [&] (Source& source_) {
+        EXPECT_EQ(source.get(), &source_);
+        sourceChanged = true;
+    };
+    
+    const auto geojson = mapbox::geojson::parse("{\"type\":\"FeatureCollection\", \"features\":[]}");
+    source->setGeoJSON(geojson);
+    EXPECT_TRUE(sourceChanged);
 }

@@ -65,6 +65,10 @@ void GeoJSONSource::Impl::setGeoJSON(const GeoJSON& geoJSON) {
         geoJSONOrSupercluster =
             std::make_unique<mapbox::supercluster::Supercluster>(features, clusterOptions);
     }
+    
+    
+    observer->onSourceChanged(base);
+
 }
 
 void GeoJSONSource::Impl::loadDescription(FileSource& fileSource) {
