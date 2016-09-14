@@ -56,6 +56,7 @@
     <string name="activity_viewpager">ViewPager</string>
     <string name="activity_runtime_style">Runtime Style</string>
     <string name="activity_geojson_clustering">GeoJson Clustering</string>
+    <string name="activity_geojson_reload">GeoJson Reload</string>
     <string name="activity_print">Print a map</string>
     <string name="activity_surfaceview_overlay">SurfaceView MediaOverlay</string>
     <string name="activity_query_rendered_feature_properties">Query feature properties</string>
@@ -88,6 +89,7 @@
     <string name="description_debug_mode">Debug Mode</string>
     <string name="description_offline">Offline Map example</string>
     <string name="description_animated_marker">Animate the position change of a Marker</string>
+    <string name="description_geojson_reload">Reload</string>
     <string name="description_polyline">Add a polyline to a map</string>
     <string name="description_polygon">Add a polygon to a map</string>
     <string name="description_directions">Example with Directions API</string>

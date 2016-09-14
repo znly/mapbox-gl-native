@@ -383,6 +383,14 @@
                 android:name="@string/category"
                 android:value="@string/category_navigation" />
         </activity>
+        <activity
+            android:name=".activity.style.GeoJsonReloadActivity"
+            android:description="@string/description_geojson_reload"
+            android:label="@string/activity_geojson_reload">
+            <meta-data
+                android:name="@string/category"
+                android:value="@string/category_style" />
+        </activity>
         <!-- For Unit tests -->
         <activity android:name=".activity.style.RuntimeStyleTestActivity" />
         <activity android:name=".activity.style.RuntimeStyleTimingTestActivity" />
