@@ -35,7 +35,7 @@ void Painter::drawClippingMasks(PaintParameters& parameters, const std::map<Unwr
         MBGL_DEBUG_GROUP(std::string{ "mask: " } + util::toString(id));
         state.matrixFor(matrix, id);
         matrix::multiply(matrix, projMatrix, matrix);
-        plainShader.u_matrix = matrix;
+        plainShader.setUniforms(UniformValue<PlainShader::matrix>{ matrix });
 
         const GLint ref = (GLint)(clip.reference.to_ulong());
         config.stencilFunc = { GL_ALWAYS, ref, mask };

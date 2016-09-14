@@ -49,9 +49,6 @@ void Painter::renderBackground(PaintParameters& parameters, const BackgroundLaye
 
     } else {
         config.program = plainShader.getID();
-        plainShader.u_color = properties.backgroundColor;
-        plainShader.u_opacity = properties.backgroundOpacity;
-
         arrayBackground.bind(plainShader, tileStencilBuffer, BUFFER_OFFSET(0), store);
     }
 
@@ -80,7 +77,10 @@ void Painter::renderBackground(PaintParameters& parameters, const BackgroundLaye
             patternShader.u_pixel_coord_upper = {{ float(pixelX >> 16), float(pixelY >> 16) }};
             patternShader.u_pixel_coord_lower = {{ float(pixelX & 0xFFFF), float(pixelY & 0xFFFF) }};
         } else {
-            plainShader.u_matrix = vertexMatrix;
+            plainShader.setUniforms(
+                UniformValue<PlainShader::color>{ properties.backgroundColor },
+                UniformValue<PlainShader::opacity>{ properties.backgroundOpacity },
+                UniformValue<PlainShader::matrix>{ vertexMatrix });
         }
 
         MBGL_CHECK_ERROR(glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei)tileStencilBuffer.index()));

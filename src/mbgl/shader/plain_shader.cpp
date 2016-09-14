@@ -3,6 +3,8 @@
 #include <mbgl/shader/fill.fragment.hpp>
 #include <mbgl/gl/gl.hpp>
 
+#include <tuple>
+
 namespace mbgl {
 
 PlainShader::PlainShader(gl::ObjectStore& store, Defines defines)
@@ -10,6 +12,9 @@ PlainShader::PlainShader(gl::ObjectStore& store, Defines defines)
              shaders::fill::vertex,
              shaders::fill::fragment,
              store, defines) {
+    apply(uniforms, [this](auto& uniform) {
+        uniform.location = MBGL_CHECK_ERROR(glGetUniformLocation(getID(), uniform.name));
+    });
 }
 
 void PlainShader::bind(GLbyte* offset) {

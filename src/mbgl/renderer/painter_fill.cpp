@@ -143,9 +143,11 @@ void Painter::renderFill(PaintParameters& parameters,
             // fragments
             // Draw filling rectangle.
             config.program = plainShader.getID();
-            plainShader.u_matrix = vertexMatrix;
-            plainShader.u_color = fillColor;
-            plainShader.u_opacity = opacity;
+            plainShader.setUniforms(
+                UniformValue<PlainShader::matrix>{ vertexMatrix },
+                UniformValue<PlainShader::color>{ fillColor },
+                UniformValue<PlainShader::opacity>{ opacity }
+            );
 
             // Draw the actual triangles into the color & stencil buffer.
             setDepthSublayer(1);
