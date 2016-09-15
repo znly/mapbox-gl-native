@@ -68,6 +68,10 @@ OfflineRegionDefinition decodeOfflineRegionDefinition(const std::string& region)
 
     return { styleURL, bounds, minZoom, maxZoom, pixelRatio };
 }
+    
+OfflineRegionMetadata decodeOfflineRegionMetadata(const std::string& region){
+
+}
 
 std::string encodeOfflineRegionDefinition(const OfflineRegionDefinition& region) {
     rapidjson::GenericDocument<rapidjson::UTF8<>, rapidjson::CrtAllocator> doc;

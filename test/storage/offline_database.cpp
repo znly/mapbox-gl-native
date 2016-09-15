@@ -632,3 +632,19 @@ TEST(OfflineDatabase, MigrateFromV4Schema) {
     // Synchronous setting should be FULL (2) after migration to v5.
     EXPECT_EQ(2, databaseSyncMode("test/fixtures/offline_database/v5.db"));
 }
+
+TEST(OfflineDatabase, UpdateMetadata) {
+    using namespace mbgl;
+    
+    OfflineDatabase db(":memory:");
+    OfflineRegionDefinition definition { "http://example.com/style", LatLngBounds::hull({1, 2}, {3, 4}), 5, 6, 2.0 };
+    OfflineRegionMetadata metadata {{ 1, 2, 3 }};
+    OfflineRegion region = db.createRegion(definition, metadata);
+    
+    OfflineRegionMetadata newmetadata {{ 4, 5, 6 }};
+    db.updateMetadata(region, newmetadata);
+    
+    std::vector<OfflineRegion> regions = db.listRegions();
+    EXPECT_EQ(region.getID(), regions.at(0).getID());
+    EXPECT_EQ(newmetadata, regions.at(0).getMetadata());
+}
