@@ -5,6 +5,9 @@
 #include <mbgl/style/sources/geojson_source_impl.hpp>
 #include <mbgl/tile/geojson_tile.hpp>
 #include <mbgl/util/rapidjson.hpp>
+#include <mbgl/tile/vector_tile.hpp>
+#include <mbgl/tile/geojson_tile.hpp>
+#include <mbgl/tile/geometry_tile_data.hpp>
 
 #include <mapbox/geojson.hpp>
 #include <mapbox/geojson/rapidjson.hpp>
@@ -66,9 +69,16 @@ void GeoJSONSource::Impl::setGeoJSON(const GeoJSON& geoJSON) {
             std::make_unique<mapbox::supercluster::Supercluster>(features, clusterOptions);
     }
     
-    
-    observer->onSourceChanged(base);
-
+    for(auto const &item : tiles) {
+        Tile*  tile = item.second.get();
+        GeoJSONTile* geometryTile = static_cast<GeoJSONTile*>(tile);
+        OverscaledTileID tileID =  geometryTile->id;
+        geometryTile->update(geoJSONOrSupercluster.get<GeoJSONVTPointer>()->getTile(
+                                                                                    tileID.canonical.z,
+                                                                                    tileID.canonical.x,
+                                                                                    tileID.canonical.y).features);
+    }
+    //observer->onSourceChanged(base);
 }
 
 void GeoJSONSource::Impl::loadDescription(FileSource& fileSource) {

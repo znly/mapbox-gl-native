@@ -54,7 +54,7 @@ public:
     GeoJSONTileData(mapbox::geometry::feature_collection<int16_t> features_)
         : features(std::move(features_)) {
     }
-
+                            
     std::unique_ptr<GeometryTileData> clone() const override {
         return std::make_unique<GeoJSONTileData>(*this);
     }
@@ -82,6 +82,10 @@ GeoJSONTile::GeoJSONTile(const OverscaledTileID& overscaledTileID,
                          const mapbox::geometry::feature_collection<int16_t>& features)
     : GeometryTile(overscaledTileID, sourceID_, parameters.style, parameters.mode) {
     setData(std::make_unique<GeoJSONTileData>(features));
+}
+    
+void GeoJSONTile::update(const mapbox::geometry::feature_collection<int16_t>& features){
+   setData(std::make_unique<GeoJSONTileData>(features));
 }
 
 void GeoJSONTile::setNecessity(Necessity) {}

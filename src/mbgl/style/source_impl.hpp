@@ -83,6 +83,7 @@ public:
 protected:
     void invalidateTiles();
 
+    std::map<OverscaledTileID, std::unique_ptr<Tile>> tiles;
     Source& base;
     SourceObserver* observer = nullptr;
 
@@ -96,7 +97,6 @@ private:
     virtual Range<uint8_t> getZoomRange() = 0;
     virtual std::unique_ptr<Tile> createTile(const OverscaledTileID&, const UpdateParameters&) = 0;
 
-    std::map<OverscaledTileID, std::unique_ptr<Tile>> tiles;
     std::map<UnwrappedTileID, RenderTile> renderTiles;
     TileCache cache;
 };

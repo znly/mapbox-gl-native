@@ -1,14 +1,17 @@
 package com.mapbox.mapboxsdk.testapp.activity.style;
 
 import android.animation.TypeEvaluator;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.mapbox.mapboxsdk.constants.MapboxConstants;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -18,8 +21,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.testapp.R;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
@@ -61,7 +69,6 @@ public class GeoJsonReloadActivity extends AppCompatActivity {
                 SymbolLayer layer = new SymbolLayer("point", "drone");
                 layer.setProperties(iconImage("marker-15"));
                 mapboxMap.addLayer(layer);
-
                 reloadSourceRecursivly();
             }
         });
@@ -74,12 +81,53 @@ public class GeoJsonReloadActivity extends AppCompatActivity {
                 if (mapboxMap != null) {
                     Source source = mapboxMap.getSource("drone");
                     if (source != null && source instanceof GeoJsonSource) {
-                        ((GeoJsonSource) source).setUrl(url);
-                        reloadSourceRecursivly();
+                        new LoadLocationPointTask(source).execute();
                     }
                 }
             }
         }, 2000);
+    }
+
+    private class LoadLocationPointTask extends AsyncTask<Void, Void, String> {
+
+        private Source source;
+
+        public LoadLocationPointTask(Source source) {
+            this.source = source;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                Response responses = null;
+
+                try {
+                    responses = client.newCall(request).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String jsonData = responses.body().string();
+                Log.e(MapboxConstants.TAG, jsonData);
+                Log.v(MapboxConstants.TAG, "Reloading");
+                return jsonData;
+            } catch (Exception e) {
+                Log.e(MapboxConstants.TAG, "Error", e);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                ((GeoJsonSource) source).setGeoJson(s);
+                reloadSourceRecursivly();
+            }
+        }
     }
 
     @Override
