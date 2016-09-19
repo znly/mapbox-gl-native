@@ -107,9 +107,9 @@ void HeadlessView::invalidate() {
     assert(false);
 }
 
-void HeadlessView::notifyMapChange(MapChange change) {
+void HeadlessView::notifyMapChange(event::Event event) {
     if (mapChangeCallback) {
-        mapChangeCallback(change);
+        mapChangeCallback(event);
     }
 }
 

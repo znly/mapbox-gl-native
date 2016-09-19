@@ -38,7 +38,7 @@ public:
     Impl(View&, FileSource&, MapMode, GLContextMode, ConstrainMode, ViewportMode);
 
     void onNeedsRepaint() override;
-    void onStyleError() override;
+    void onStyleError(std::exception_ptr) override;
     void onResourceError(std::exception_ptr) override;
 
     void update();
@@ -92,7 +92,7 @@ Map::Impl::Impl(View& view_,
                 ViewportMode viewportMode_)
     : view(view_),
       fileSource(fileSource_),
-      transform([this](MapChange change) { view.notifyMapChange(change); },
+      transform([this](event::Event event) { view.notifyMapChange(event); },
                 constrainMode_,
                 viewportMode_),
       mode(mode_),
@@ -163,27 +163,29 @@ void Map::render() {
     }
 
     if (impl->renderState == RenderState::Never) {
-        impl->view.notifyMapChange(MapChangeWillStartRenderingMap);
+        impl->view.notifyMapChange(event::MapWillStartRendering());
     }
 
-    impl->view.notifyMapChange(MapChangeWillStartRenderingFrame);
+    impl->view.notifyMapChange(event::MapWillStartRendering());
 
     const Update flags = impl->transform.updateTransitions(Clock::now());
 
     impl->render();
 
-    impl->view.notifyMapChange(isFullyLoaded() ?
-        MapChangeDidFinishRenderingFrameFullyRendered :
-        MapChangeDidFinishRenderingFrame);
+    auto frameEvent = event::FrameDidFinishRendering();
+    frameEvent.fullyRendered = isFullyLoaded();
+    impl->view.notifyMapChange(frameEvent);
 
     if (!isFullyLoaded()) {
         impl->renderState = RenderState::Partial;
     } else if (impl->renderState != RenderState::Fully) {
         impl->renderState = RenderState::Fully;
-        impl->view.notifyMapChange(MapChangeDidFinishRenderingMapFullyRendered);
+        auto mapEvent = event::MapDidFinishRendering();
+        mapEvent.fullyRendered = true;
+        impl->view.notifyMapChange(mapEvent);
         if (impl->loading) {
             impl->loading = false;
-            impl->view.notifyMapChange(MapChangeDidFinishLoadingMap);
+            impl->view.notifyMapChange(event::MapDidFinishLoading());
         }
     }
 
@@ -290,7 +292,7 @@ void Map::setStyleURL(const std::string& url) {
 
     impl->loading = true;
 
-    impl->view.notifyMapChange(MapChangeWillStartLoadingMap);
+    impl->view.notifyMapChange(event::MapWillStartLoading());
 
     impl->styleRequest = nullptr;
     impl->styleURL = url;
@@ -317,7 +319,7 @@ void Map::setStyleURL(const std::string& url) {
             } else {
                 Log::Error(Event::Setup, "loading style failed: %s", res.error->message.c_str());
             }
-            impl->onStyleError();
+            impl->onStyleError(std::make_exception_ptr(std::runtime_error(res.error->message)));
             impl->onResourceError(std::make_exception_ptr(std::runtime_error(res.error->message)));
         } else if (res.notModified || res.noContent) {
             return;
@@ -334,7 +336,7 @@ void Map::setStyleJSON(const std::string& json) {
 
     impl->loading = true;
 
-    impl->view.notifyMapChange(MapChangeWillStartLoadingMap);
+    impl->view.notifyMapChange(event::MapWillStartLoading());
 
     impl->styleURL.clear();
     impl->styleJSON.clear();
@@ -911,8 +913,10 @@ void Map::Impl::onNeedsRepaint() {
     asyncUpdate.send();
 }
 
-void Map::Impl::onStyleError() {
-    view.notifyMapChange(MapChangeDidFailLoadingMap);
+void Map::Impl::onStyleError(std::exception_ptr error) {
+    auto event = event::MapDidFailLoading();
+    event.error = error;
+    view.notifyMapChange(event);
 }
 
 void Map::Impl::onResourceError(std::exception_ptr error) {

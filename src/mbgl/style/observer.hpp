@@ -18,7 +18,7 @@ public:
      * and `onNeedsRepaint` will be called.
      */
     void onNeedsRepaint() override {}
-    virtual void onStyleError() {}
+    virtual void onStyleError(std::exception_ptr) {}
     virtual void onResourceError(std::exception_ptr) {}
 };
 

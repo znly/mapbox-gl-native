@@ -14,7 +14,7 @@ PremultipliedImage View::readStillImage() {
     return {};
 }
 
-void View::notifyMapChange(MapChange) {
+void View::notifyMapChange(event::Event) {
     // no-op
 }
 

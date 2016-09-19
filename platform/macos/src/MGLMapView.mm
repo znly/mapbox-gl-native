@@ -744,7 +744,7 @@ public:
     [self.layer setNeedsDisplay];
 }
 
-- (void)notifyMapChange:(mbgl::MapChange)change {
+- (void)notifyMapChange:(mbgl::event::Event)event {
     // Ignore map updates when the Map object isn't set.
     if (!_mbglMap) {
         return;
@@ -2506,8 +2506,8 @@ public:
                   static_cast<uint16_t>(bounds.size.height) }};
     }
 
-    void notifyMapChange(mbgl::MapChange change) override {
-        [nativeView notifyMapChange:change];
+    void notifyMapChange(mbgl::event::Event event) override {
+        [nativeView notifyMapChange:event];
     }
 
     void invalidate() override {

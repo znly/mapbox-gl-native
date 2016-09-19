@@ -54,8 +54,8 @@ public:
     // doesn't support reading from the framebuffer, return a null pointer.
     virtual PremultipliedImage readStillImage();
 
-    // Notifies a watcher of map x/y/scale/rotation changes.
-    virtual void notifyMapChange(MapChange change);
+    // Notifies a watcher of various map-related events, such as viewport changes and loading events.
+    virtual void notifyMapChange(event::Event event);
 
 protected:
     mbgl::Map *map = nullptr;

@@ -94,7 +94,7 @@ void Style::setJSON(const std::string& json) {
 
     if (error) {
         Log::Error(Event::ParseStyle, "Failed to parse style: %s", util::toString(error).c_str());
-        observer->onStyleError();
+        observer->onStyleError(error);
         observer->onResourceError(error);
 
         return;

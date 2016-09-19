@@ -1,24 +1,37 @@
 #pragma once
 
-#include <cstdint>
+#include <exception>
 
 namespace mbgl {
+namespace event {
 
-enum MapChange : uint8_t {
-    MapChangeRegionWillChange = 0,
-    MapChangeRegionWillChangeAnimated = 1,
-    MapChangeRegionIsChanging = 2,
-    MapChangeRegionDidChange = 3,
-    MapChangeRegionDidChangeAnimated = 4,
-    MapChangeWillStartLoadingMap = 5,
-    MapChangeDidFinishLoadingMap = 6,
-    MapChangeDidFailLoadingMap = 7,
-    MapChangeWillStartRenderingFrame = 8,
-    MapChangeDidFinishRenderingFrame = 9,
-    MapChangeDidFinishRenderingFrameFullyRendered = 10,
-    MapChangeWillStartRenderingMap = 11,
-    MapChangeDidFinishRenderingMap = 12,
-    MapChangeDidFinishRenderingMapFullyRendered = 13,
+struct Event {};
+
+struct RegionChangeEvent: public Event {
+    bool animated = false;
+};
+struct RegionWillChangeEvent: public RegionChangeEvent {};
+struct RegionIsChangingEvent: public RegionChangeEvent {};
+struct RegionDidChangeEvent: public RegionChangeEvent {};
+
+struct MapLoadEvent: public Event {};
+struct MapWillStartLoading: public MapLoadEvent {};
+struct MapDidFinishLoading: public MapLoadEvent {};
+struct MapDidFailLoading: public MapLoadEvent {
+    std::exception_ptr error;
 };
 
+struct FrameRenderEvent: public Event {};
+struct FrameWillStartRendering: public FrameRenderEvent {};
+struct FrameDidFinishRendering: public FrameRenderEvent {
+    bool fullyRendered = false;
+};
+
+struct MapRenderEvent: public Event {};
+struct MapWillStartRendering: public MapRenderEvent {};
+struct MapDidFinishRendering: public MapRenderEvent {
+    bool fullyRendered = false;
+};
+
+}
 } // namespace mbgl

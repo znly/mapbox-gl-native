@@ -36,7 +36,7 @@ static double _normalizeAngle(double angle, double anchorAngle)
     return angle;
 }
 
-Transform::Transform(std::function<void(MapChange)> callback_,
+Transform::Transform(std::function<void(event::Event)> callback_,
                      ConstrainMode constrainMode,
                      ViewportMode viewportMode)
     : callback(std::move(callback_)), state(constrainMode, viewportMode) {
@@ -50,7 +50,7 @@ bool Transform::resize(const std::array<uint16_t, 2> size) {
     }
 
     if (callback) {
-        callback(MapChangeRegionWillChange);
+        callback(event::RegionWillChangeEvent());
     }
 
     state.width = size[0];
@@ -58,7 +58,7 @@ bool Transform::resize(const std::array<uint16_t, 2> size) {
     state.constrain(state.scale, state.x, state.y);
 
     if (callback) {
-        callback(MapChangeRegionDidChange);
+        callback(event::RegionDidChangeEvent());
     }
 
     return true;
@@ -564,7 +564,9 @@ void Transform::startTransition(const CameraOptions& camera,
 
     bool isAnimated = duration != Duration::zero();
     if (callback) {
-        callback(isAnimated ? MapChangeRegionWillChangeAnimated : MapChangeRegionWillChange);
+        auto event = event::RegionWillChangeEvent();
+        event.animated = isAnimated;
+        callback(event);
     }
 
     // Associate the anchor, if given, with a coordinate.
@@ -596,7 +598,7 @@ void Transform::startTransition(const CameraOptions& camera,
                 animation.transitionFrameFn(t);
             }
             if (callback) {
-                callback(MapChangeRegionIsChanging);
+                callback(event::RegionIsChangingEvent());
             }
         } else {
             transitionFinishFn();
@@ -617,7 +619,9 @@ void Transform::startTransition(const CameraOptions& camera,
             animation.transitionFinishFn();
         }
         if (callback) {
-            callback(isAnimated ? MapChangeRegionDidChangeAnimated : MapChangeRegionDidChange);
+            auto event = event::RegionDidChangeEvent();
+            event.animated = isAnimated;
+            callback(event);
         }
     };
 

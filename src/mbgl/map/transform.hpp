@@ -18,7 +18,7 @@ namespace mbgl {
 
 class Transform : private util::noncopyable {
 public:
-    Transform(std::function<void(MapChange)> = nullptr,
+    Transform(std::function<void(event::Event)> = nullptr,
               ConstrainMode = ConstrainMode::HeightOnly,
               ViewportMode = ViewportMode::Default);
 
@@ -163,7 +163,7 @@ public:
     LatLng screenCoordinateToLatLng(const ScreenCoordinate&) const;
 
 private:
-    std::function<void(MapChange)> callback;
+    std::function<void(event::Event)> callback;
 
     TransformState state;
 
