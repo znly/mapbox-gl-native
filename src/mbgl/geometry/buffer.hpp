@@ -70,8 +70,8 @@ public:
         }
     }
 
-    GLuint getID() const {
-        return buffer ? *buffer : 0;
+    gl::BufferID getID() const {
+        return buffer ? *buffer : gl::BufferID::None;
     }
 
     // Uploads the buffer to the GPU to be available when we need it.

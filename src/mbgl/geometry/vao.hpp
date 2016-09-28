@@ -25,10 +25,10 @@ public:
             vertexBuffer.bind(context);
             shader.bind(offset);
             if (vao) {
-                storeBinding(shader, vertexBuffer.getID(), 0, offset);
+                storeBinding(shader, vertexBuffer.getID(), gl::BufferID::None, offset);
             }
         } else {
-            verifyBinding(shader, vertexBuffer.getID(), 0, offset);
+            verifyBinding(shader, vertexBuffer.getID(), gl::BufferID::None, offset);
         }
     }
 
@@ -57,8 +57,14 @@ public:
 
 private:
     void bindVertexArrayObject(gl::Context&);
-    void storeBinding(Shader &shader, GLuint vertexBuffer, GLuint elementsBuffer, GLbyte *offset);
-    void verifyBinding(Shader &shader, GLuint vertexBuffer, GLuint elementsBuffer, GLbyte *offset);
+    void storeBinding(Shader& shader,
+                      gl::BufferID vertexBuffer,
+                      gl::BufferID elementsBuffer,
+                      GLbyte* offset);
+    void verifyBinding(Shader& shader,
+                       gl::BufferID vertexBuffer,
+                       gl::BufferID elementsBuffer,
+                       GLbyte* offset);
 
     mbgl::optional<gl::UniqueVAO> vao;
 
@@ -66,8 +72,8 @@ private:
     // detect errors and report
     GLuint bound_shader = 0;
     const char* bound_shader_name = "";
-    GLuint bound_vertex_buffer = 0;
-    GLuint bound_elements_buffer = 0;
+    gl::BufferID bound_vertex_buffer = gl::BufferID::None;
+    gl::BufferID bound_elements_buffer = gl::BufferID::None;
     GLbyte *bound_offset = nullptr;
 };
 

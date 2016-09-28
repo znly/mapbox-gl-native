@@ -81,7 +81,9 @@ void Context::performCleanup() {
                 elementBuffer.setDirty();
             }
         }
-        MBGL_CHECK_ERROR(glDeleteBuffers(int(abandonedBuffers.size()), abandonedBuffers.data()));
+        MBGL_CHECK_ERROR(glDeleteBuffers(
+            GLsizei(abandonedBuffers.size()),
+            reinterpret_cast<std::underlying_type_t<BufferID>*>(abandonedBuffers.data())));
         abandonedBuffers.clear();
     }
 

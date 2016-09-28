@@ -6,6 +6,7 @@
 #include <cassert>
 
 #include <mbgl/gl/gl.hpp>
+#include <mbgl/gl/types.hpp>
 #include <mbgl/util/color.hpp>
 
 namespace mbgl {
@@ -349,18 +350,18 @@ template <GLenum target>
 struct BindBuffer {
     static_assert(target == GL_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER,
                   "target must be one of GL_ARRAY_BUFFER or GL_ELEMENT_ARRAY_BUFFER");
-    using Type = GLuint;
-    static const constexpr Type Default = 0;
+    using Type = BufferID;
+    static const constexpr Type Default = gl::BufferID::None;
     static void Set(const Type& value) {
-        MBGL_CHECK_ERROR(glBindBuffer(target, value));
+        MBGL_CHECK_ERROR(glBindBuffer(target, GLuint(value)));
     }
-    static Type Get() {
-        GLint binding;
-        MBGL_CHECK_ERROR(glGetIntegerv(target == GL_ARRAY_BUFFER ? GL_ARRAY_BUFFER_BINDING
-                                                                 : GL_ELEMENT_ARRAY_BUFFER_BINDING,
-                                       &binding));
-        return binding;
-    }
+//    static Type Get() {
+//        Type binding;
+//        MBGL_CHECK_ERROR(glGetIntegerv(target == GL_ARRAY_BUFFER ? GL_ARRAY_BUFFER_BINDING
+//                                                                 : GL_ELEMENT_ARRAY_BUFFER_BINDING,
+//                                       &binding));
+//        return binding;
+//    }
 };
 
 template <GLenum target>

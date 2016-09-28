@@ -26,8 +26,8 @@ public:
     }
 
     UniqueBuffer createBuffer() {
-        GLuint id = 0;
-        MBGL_CHECK_ERROR(glGenBuffers(1, &id));
+        BufferID id;
+        MBGL_CHECK_ERROR(glGenBuffers(1, reinterpret_cast<std::underlying_type_t<BufferID>*>(&id)));
         return UniqueBuffer { std::move(id), { this } };
     }
 
@@ -117,7 +117,7 @@ private:
 
     std::vector<GLuint> abandonedPrograms;
     std::vector<GLuint> abandonedShaders;
-    std::vector<GLuint> abandonedBuffers;
+    std::vector<BufferID> abandonedBuffers;
     std::vector<GLuint> abandonedTextures;
     std::vector<GLuint> abandonedVAOs;
     std::vector<GLuint> abandonedFBOs;

@@ -17,7 +17,7 @@ void ShaderDeleter::operator()(GLuint id) const {
     context->abandonedShaders.push_back(id);
 }
 
-void BufferDeleter::operator()(GLuint id) const {
+void BufferDeleter::operator()(BufferID id) const {
     assert(context);
     context->abandonedBuffers.push_back(id);
 }
