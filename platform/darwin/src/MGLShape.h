@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
  and providing an appropriate value for the coordinate property inherited from
  the `MGLAnnotation` protocol.
  */
-@interface MGLShape : NSObject <MGLAnnotation>
+@interface MGLShape : NSObject <MGLAnnotation, NSSecureCoding>
 
 /**
  The title of the shape annotation. The default value of this property is `nil`.
