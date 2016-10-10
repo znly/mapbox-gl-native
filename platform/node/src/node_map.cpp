@@ -362,7 +362,7 @@ void NodeMap::startRender(NodeMap::RenderOptions options) {
     map->setPitch(options.pitch);
     map->setDebug(options.debugOptions);
 
-    map->renderStill([this](const std::exception_ptr eptr, mbgl::PremultipliedImage&& result) {
+    map->renderStill([this](const std::exception_ptr eptr, mbgl::PremultipliedImage& result) {
         if (eptr) {
             error = std::move(eptr);
             uv_async_send(async);

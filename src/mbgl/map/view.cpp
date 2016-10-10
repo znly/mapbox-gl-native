@@ -10,7 +10,7 @@ void View::initialize(Map *map_) {
     map = map_;
 }
 
-PremultipliedImage View::readStillImage(std::array<uint16_t, 2>) {
+PremultipliedImage& View::readStillImage(std::array<uint16_t, 2>) {
     return {};
 }
 

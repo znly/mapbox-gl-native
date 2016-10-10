@@ -40,7 +40,7 @@ void HeadlessView::resize(const uint16_t width, const uint16_t height) {
     needsResize = true;
 }
 
-PremultipliedImage HeadlessView::readStillImage(std::array<uint16_t, 2> size) {
+PremultipliedImage& HeadlessView::readStillImage(std::array<uint16_t, 2> size) {
     assert(active);
 
     if (!size[0] || !size[1]) {
