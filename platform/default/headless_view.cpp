@@ -49,6 +49,9 @@ PremultipliedImage& HeadlessView::readStillImage(std::array<uint16_t, 2> size) {
     }
 
     PremultipliedImage image { size[0], size[1] };
+    assert(image.width == size[0])
+    assert(image.height == size[1])
+
     MBGL_CHECK_ERROR(glReadPixels(0, 0, size[0], size[1], GL_RGBA, GL_UNSIGNED_BYTE, image.data.get()));
 
     const auto stride = image.stride();

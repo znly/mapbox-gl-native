@@ -354,6 +354,7 @@ void NodeMap::Render(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 }
 
 void NodeMap::startRender(NodeMap::RenderOptions options) {
+    // view.setImage(options.image);
     view.resize(options.width, options.height);
     map->update(mbgl::Update::Dimensions);
     map->setClasses(options.classes);
