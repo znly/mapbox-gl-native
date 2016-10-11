@@ -24,7 +24,6 @@ var data = fs.readFileSync(input_file, 'utf8');
 // Replace uniform pragmas
 
 var pragma_mapbox_regex = /(\s*)#pragma\s+mapbox\s*:\s+(define|initialize)\s+(low|medium|high)p\s+(float|vec(?:2|3|4))\s+(.*)/;
-var pixel_ratio_regex = /(.*)#define(.*)DEVICE_PIXEL_RATIO(.*)/;
 var data = data.split('\n').map(function(line) {
     var params = line.match(pragma_mapbox_regex);
     if (params) {
@@ -33,8 +32,6 @@ var data = data.split('\n').map(function(line) {
         } else {
             return params[1] + params[3] + 'p ' + params[4] + ' ' + params[5] + ' = u_' + params[5] + ';';
         }
-    } else if (line.match(pixel_ratio_regex)){
-        return '\n#define DEVICE_PIXEL_RATIO 2.0\n' + line;
     } else {
         return line;
     }
@@ -64,6 +61,7 @@ var content =
     '#else\n' +
     '    "#version 120"\n' +
     '#endif\n' +
+    '\n#define DEVICE_PIXEL_RATIO 2.0\n' +
     '    R"MBGL_SHADER(\n' + data + ')MBGL_SHADER";\n' +
     '\n' +
     '} // namespace ' + shader_name + '\n' +
