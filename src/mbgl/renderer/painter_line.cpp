@@ -65,7 +65,7 @@ void Painter::renderLine(PaintParameters& parameters,
         context.program = linesdfShader.getID();
 
         linesdfShader.u_matrix = vtxMatrix;
-        linesdfShader.u_linewidth = properties.lineWidth / 2;
+        linesdfShader.u_width = properties.lineWidth / 2;
         linesdfShader.u_gapwidth = properties.lineGapWidth / 2;
         linesdfShader.u_antialiasing = antialiasing / 2;
         linesdfShader.u_ratio = ratio;
@@ -113,7 +113,7 @@ void Painter::renderLine(PaintParameters& parameters,
         context.program = linepatternShader.getID();
 
         linepatternShader.u_matrix = vtxMatrix;
-        linepatternShader.u_linewidth = properties.lineWidth / 2;
+        linepatternShader.u_width = properties.lineWidth / 2;
         linepatternShader.u_gapwidth = properties.lineGapWidth / 2;
         linepatternShader.u_antialiasing = antialiasing / 2;
         linepatternShader.u_ratio = ratio;
@@ -148,7 +148,7 @@ void Painter::renderLine(PaintParameters& parameters,
         context.program = lineShader.getID();
 
         lineShader.u_matrix = vtxMatrix;
-        lineShader.u_linewidth = properties.lineWidth / 2;
+        lineShader.u_width = properties.lineWidth / 2;
         lineShader.u_gapwidth = properties.lineGapWidth / 2;
         lineShader.u_antialiasing = antialiasing / 2;
         lineShader.u_ratio = ratio;

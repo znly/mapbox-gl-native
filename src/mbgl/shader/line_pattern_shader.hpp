@@ -18,7 +18,7 @@ public:
     gl::Attribute<uint8_t, 4> a_data = { "a_data", *this };
 
     gl::UniformMatrix<4>              u_matrix              = {"u_matrix",              *this};
-    gl::Uniform<float>                u_linewidth           = {"u_linewidth",           *this};
+    gl::Uniform<float>                u_width               = {"u_width",               *this};
     gl::Uniform<float>                u_gapwidth            = {"u_gapwidth",            *this};
     gl::Uniform<float>                u_antialiasing        = {"u_antialiasing",        *this};
     gl::Uniform<std::array<float, 2>> u_pattern_size_a      = {"u_pattern_size_a",      *this};

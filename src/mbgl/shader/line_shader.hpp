@@ -22,7 +22,7 @@ public:
     gl::Uniform<Color>   u_color               = {"u_color",              *this};
     gl::Uniform<float>   u_opacity             = {"u_opacity",            *this};
     gl::Uniform<float>   u_ratio               = {"u_ratio",              *this};
-    gl::Uniform<float>   u_linewidth           = {"u_linewidth",          *this};
+    gl::Uniform<float>   u_width               = {"u_width",              *this};
     gl::Uniform<float>   u_gapwidth            = {"u_gapwidth",           *this};
     gl::Uniform<float>   u_antialiasing        = {"u_antialiasing",       *this};
     gl::Uniform<float>   u_blur                = {"u_blur",               *this};
