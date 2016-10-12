@@ -4466,13 +4466,6 @@ public:
         case mbgl::MapChangeRegionWillChange:
         case mbgl::MapChangeRegionWillChangeAnimated:
         {
-            if ( ! _userLocationAnnotationIsSelected
-                || self.userTrackingMode == MGLUserTrackingModeNone
-                || self.userTrackingState != MGLUserTrackingStateChanged)
-            {
-                [self deselectAnnotation:self.selectedAnnotation animated:NO];
-            }
-
             if ( ! [self isSuppressingChangeDelimiters] && [self.delegate respondsToSelector:@selector(mapView:regionWillChangeAnimated:)])
             {
                 BOOL animated = change == mbgl::MapChangeRegionWillChangeAnimated;
@@ -4637,6 +4630,15 @@ public:
         else
         {
             annotationView.center = [self convertCoordinate:annotationContext.annotation.coordinate toPointToView:self];
+            UIView <MGLCalloutView> *calloutView = self.calloutViewForSelectedAnnotation;
+            if (calloutView && calloutView.representedObject == annotationContext.annotation) {
+                CGPoint point = annotationView.center;
+                point.y -= annotationView.bounds.size.height/2.0f;
+                if ( ! CGPointEqualToPoint(calloutView.center, point))
+                {
+                    calloutView.center = point;
+                }
+            }
         }
     }
     
