@@ -40,6 +40,7 @@ class LineBucket;
 class CircleBucket;
 class SymbolBucket;
 class RasterBucket;
+class TerrainBucket;
 
 class Shaders;
 class SymbolSDFShader;
@@ -55,6 +56,7 @@ class LineLayer;
 class CircleLayer;
 class SymbolLayer;
 class RasterLayer;
+class TerrainLayer;
 class BackgroundLayer;
 } // namespace style
 
@@ -97,6 +99,7 @@ public:
     void renderCircle(PaintParameters&, CircleBucket&, const style::CircleLayer&, const RenderTile&);
     void renderSymbol(PaintParameters&, SymbolBucket&, const style::SymbolLayer&, const RenderTile&);
     void renderRaster(PaintParameters&, RasterBucket&, const style::RasterLayer&, const RenderTile&);
+    void renderTerrain(PaintParameters&, TerrainBucket&, const style::TerrainLayer&, const RenderTile&);
     void renderBackground(PaintParameters&, const style::BackgroundLayer&);
 
     float saturationFactor(float saturation);

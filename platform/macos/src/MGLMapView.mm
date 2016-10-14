@@ -2561,8 +2561,9 @@ public:
     }
 
     mbgl::gl::value::Viewport::Type getViewport() const {
-        return { 0, 0, static_cast<uint16_t>(nativeView.bounds.size.width),
-                 static_cast<uint16_t>(nativeView.bounds.size.height) };
+        NSRect bounds = [nativeView convertRectToBacking:nativeView.bounds];
+        return { 0, 0, static_cast<uint16_t>(bounds.size.width),
+                 static_cast<uint16_t>(bounds.size.height) };
     }
 
     void updateViewBinding() {
