@@ -27,6 +27,10 @@ Shader::Shader(const char* name_,
       vertexShader(context.createVertexShader()),
       fragmentShader(context.createFragmentShader()) {
     util::stopwatch stopwatch("shader compilation", Event::Shader);
+    
+//    std::string pixelRatioStr (std::to_string(view.getPixelRatio()));
+//    std::string definePixelRatio ("\n#define DEVICE_PIXEL_RATIO " + pixelRatioStr + "\n");
+//    fragment = definePixelRatio + fragment;
 
     if (!compileShader(vertexShader, vertexSource)) {
         Log::Error(Event::Shader, "Vertex shader %s failed to compile: %s", name, vertexSource);

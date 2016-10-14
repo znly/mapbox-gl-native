@@ -8,6 +8,7 @@
 #include <mbgl/platform/log.hpp>
 #include <mbgl/gl/gl.hpp>
 #include <mbgl/gl/debugging.hpp>
+#include <mbgl/gl/shader_parameters.hpp>
 
 #include <mbgl/style/style.hpp>
 #include <mbgl/style/layer_impl.hpp>
@@ -64,10 +65,11 @@ Painter::Painter(const TransformState& state_)
 #ifndef NDEBUG
     gl::debugging::enable();
 #endif
-
-    shaders = std::make_unique<Shaders>(context);
+    shaderParameters = gl::ShaderParameters{ frame.pixelRatio, false };
+    shaders = std::make_unique<Shaders>(context, shaderParameters);
 #ifndef NDEBUG
-    overdrawShaders = std::make_unique<Shaders>(context, gl::Shader::Overdraw);
+    shaderParametersOverdraw = gl::ShaderParameters{ frame.pixelRatio, true };
+    overdrawShaders = std::make_unique<Shaders>(context, shaderParametersOverdraw);
 #endif
 
     // Reset GL values

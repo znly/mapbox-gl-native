@@ -24,7 +24,8 @@ var data = fs.readFileSync(input_file, 'utf8');
 // Replace uniform pragmas
 
 var pragma_mapbox_regex = /(\s*)#pragma\s+mapbox\s*:\s+(define|initialize)\s+(low|medium|high)p\s+(float|vec(?:2|3|4))\s+(.*)/;
-var data = '\n#define DEVICE_PIXEL_RATIO 2.0\n' + data.split('\n').map(function(line) {
+//'\n#define DEVICE_PIXEL_RATIO 2.0\n' + 
+var data = data.split('\n').map(function(line) {
     var params = line.match(pragma_mapbox_regex);
     if (params) {
         if (params[2] === 'define') {
