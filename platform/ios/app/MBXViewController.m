@@ -46,6 +46,7 @@ typedef NS_ENUM(NSInteger, MBXSettingsAnnotationsRows) {
     MBXSettingsAnnotations10000Sprites,
     MBXSettingsAnnotationsTestShapes,
     MBXSettingsAnnotationsCustomCallout,
+    MBXSettingsAnnotationsQueryAnnotations,
     MBXSettingsAnnotationsRemoveAnnotations,
 };
 
@@ -97,6 +98,11 @@ typedef NS_ENUM(NSInteger, MBXSettingsMiscellaneousRows) {
 @property (nonatomic) NSInteger styleIndex;
 @property (nonatomic) BOOL debugLoggingEnabled;
 @property (nonatomic) BOOL customUserLocationAnnnotationEnabled;
+
+@property (nonatomic) BOOL isTestingFeaturesInBox;
+@property (nonatomic) UIView *featuresInBoxView;
+@property (nonatomic) CLLocationCoordinate2D countPointCoordinate;
+@property (nonatomic) UILabel *countLabel;
 
 @end
 
@@ -289,6 +295,7 @@ typedef NS_ENUM(NSInteger, MBXSettingsMiscellaneousRows) {
                 @"Add 10,000 Sprites",
                 @"Add Test Shapes",
                 @"Add Point With Custom Callout",
+                @"Query Annotations",
                 @"Remove Annotations",
             ]];
             break;
@@ -386,6 +393,9 @@ typedef NS_ENUM(NSInteger, MBXSettingsMiscellaneousRows) {
                     break;
                 case MBXSettingsAnnotationsCustomCallout:
                     [self addAnnotationWithCustomCallout];
+                    break;
+                case MBXSettingsAnnotationsQueryAnnotations:
+                    [self testQueryPointAnnotations];
                     break;
                 case MBXSettingsAnnotationsRemoveAnnotations:
                     [self.mapView removeAnnotations:self.mapView.annotations];
@@ -873,6 +883,20 @@ typedef NS_ENUM(NSInteger, MBXSettingsMiscellaneousRows) {
     _customUserLocationAnnnotationEnabled = !_customUserLocationAnnnotationEnabled;
     self.mapView.showsUserLocation = NO;
     self.mapView.userTrackingMode = MGLUserTrackingModeFollow;
+}
+
+- (void)testQueryPointAnnotations {
+    NSNumber *visibleAnnotationCount = @(self.mapView.visibleAnnotations.count);
+    NSString *message;
+    if ([visibleAnnotationCount integerValue] == 1) {
+        message = [NSString stringWithFormat:@"There is %@ visible annotation.", visibleAnnotationCount];
+    } else {
+        message = [NSString stringWithFormat:@"There are %@ visible annotations.", visibleAnnotationCount];
+    }
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Visible Annotations" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)printTelemetryLogFile
