@@ -168,12 +168,12 @@ static NSURL *MGLStyleURL_emerald;
 }
 
 - (void)setLayers:(NS_MUTABLE_ARRAY_OF(MGLStyleLayer *) *)layers {
-    std::vector<mbgl::style::Layer *> rawLayers;
+    std::vector<std::unique_ptr<mbgl::style::Layer>> rawLayers;
     rawLayers.reserve(layers.count);
     for (MGLStyleLayer *layer in layers.reverseObjectEnumerator) {
-        rawLayers.push_back(layer.layer);
+        rawLayers.push_back(std::unique_ptr<mbgl::style::Layer>(layer.layer));
     }
-    self.mapView.mbglMap->setLayers(rawLayers);
+    self.mapView.mbglMap->setLayers(std::move(rawLayers));
 }
 
 - (NSUInteger)countOfLayers

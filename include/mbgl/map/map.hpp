@@ -159,7 +159,7 @@ public:
     // Layers
     std::vector<style::Layer*> getLayers();
     style::Layer* getLayer(const std::string& layerID);
-    void setLayers(std::vector<style::Layer*>&);
+    void setLayers(std::vector<std::unique_ptr<style::Layer>>);
     void addLayer(std::unique_ptr<style::Layer>, const optional<std::string>& beforeLayerID = {});
     void removeLayer(const std::string& layerID);
 

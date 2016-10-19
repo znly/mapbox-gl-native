@@ -798,10 +798,10 @@ style::Layer* Map::getLayer(const std::string& layerID) {
     return nullptr;
 }
 
-void Map::setLayers(std::vector<style::Layer*>& layers) {
+void Map::setLayers(std::vector<std::unique_ptr<style::Layer>> layers) {
     impl->view.activate();
 
-    impl->style->setLayers(layers);
+    impl->style->setLayers(std::move(layers));
     impl->updateFlags |= Update::Classes;
     impl->asyncUpdate.send();
 

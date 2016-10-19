@@ -176,10 +176,10 @@ Layer* Style::getLayer(const std::string& id) const {
     return it != layers.end() ? it->get() : nullptr;
 }
 
-void Style::setLayers(std::vector<Layer*>& newLayers) {
+void Style::setLayers(std::vector<std::unique_ptr<style::Layer>> newLayers) {
     layers.empty();
     for (auto& layer : newLayers) {
-        addLayer(std::unique_ptr<Layer>(layer));
+        addLayer(std::move(layer));
     }
 }
 
