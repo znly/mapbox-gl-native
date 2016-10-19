@@ -4511,8 +4511,6 @@ public:
         }
         case mbgl::MapChangeDidFinishLoadingMap:
         {
-            [self.style willChangeValueForKey:@"layers"];
-            [self.style didChangeValueForKey:@"layers"];
             if ([self.delegate respondsToSelector:@selector(mapViewDidFinishLoadingMap:)])
             {
                 [self.delegate mapViewDidFinishLoadingMap:self];
@@ -4565,6 +4563,8 @@ public:
         }
         case mbgl::MapChangeDidFinishLoadingStyle:
         {
+            [self.style willChangeValueForKey:@"layers"];
+            [self.style didChangeValueForKey:@"layers"];
             if ([self.delegate respondsToSelector:@selector(mapView:didFinishLoadingStyle:)])
             {
                 [self.delegate mapView:self didFinishLoadingStyle:self.style];
