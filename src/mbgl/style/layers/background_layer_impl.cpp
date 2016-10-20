@@ -16,7 +16,7 @@ bool BackgroundLayer::Impl::recalculate(const CalculationParameters& parameters)
     return hasTransitions;
 }
 
-std::unique_ptr<Bucket> BackgroundLayer::Impl::createBucket(BucketParameters&) const {
+std::unique_ptr<Bucket> BackgroundLayer::Impl::createBucket(BucketParameters&, const GeometryTileLayer&) const {
     return nullptr;
 }
 

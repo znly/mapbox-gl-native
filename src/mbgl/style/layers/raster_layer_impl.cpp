@@ -16,7 +16,7 @@ bool RasterLayer::Impl::recalculate(const CalculationParameters& parameters) {
     return hasTransitions;
 }
 
-std::unique_ptr<Bucket> RasterLayer::Impl::createBucket(BucketParameters&) const {
+std::unique_ptr<Bucket> RasterLayer::Impl::createBucket(BucketParameters&, const GeometryTileLayer&) const {
     return nullptr;
 }
 

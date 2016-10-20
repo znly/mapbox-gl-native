@@ -26,12 +26,12 @@ bool SymbolLayer::Impl::recalculate(const CalculationParameters& parameters) {
     return hasTransitions;
 }
 
-std::unique_ptr<Bucket> SymbolLayer::Impl::createBucket(BucketParameters&) const {
+std::unique_ptr<Bucket> SymbolLayer::Impl::createBucket(BucketParameters&, const GeometryTileLayer&) const {
     assert(false); // Should be calling createLayout() instead.
     return nullptr;
 }
 
-std::unique_ptr<SymbolLayout> SymbolLayer::Impl::createLayout(BucketParameters& parameters) const {
+std::unique_ptr<SymbolLayout> SymbolLayer::Impl::createLayout(BucketParameters& parameters, const GeometryTileLayer& layer) const {
     SymbolLayoutProperties layoutProperties = layout;
 
     CalculationParameters p(parameters.tileID.overscaledZ);
@@ -65,11 +65,11 @@ std::unique_ptr<SymbolLayout> SymbolLayer::Impl::createLayout(BucketParameters& 
     layoutProperties.textSize.calculate(CalculationParameters(p.z + 1));
 
     return std::make_unique<SymbolLayout>(id,
-                                          parameters.layer.getName(),
+                                          layer.getName(),
                                           parameters.tileID.overscaleFactor(),
                                           parameters.tileID.overscaledZ,
                                           parameters.mode,
-                                          parameters.layer,
+                                          layer,
                                           filter,
                                           layoutProperties,
                                           textMaxSize,
