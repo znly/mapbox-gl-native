@@ -4618,6 +4618,22 @@ public:
             else
             {
                 // if there is no annotationView at this point then we are dealing with a sprite backed annotation
+                UIView <MGLCalloutView> *calloutView = self.calloutViewForSelectedAnnotation;
+                if (calloutView && calloutView.representedObject == annotationContext.annotation) {
+                    NSObject<MGLAnnotation> *annotation = annotationContext.annotation;
+                    BOOL implementsImageForAnnotation = [self.delegate respondsToSelector:@selector(mapView:imageForAnnotation:)];
+                    if (implementsImageForAnnotation) {
+                        MGLAnnotationImage *image = [self.delegate mapView:self imageForAnnotation:annotation];
+                        if (!image) {
+                            image = [self dequeueReusableAnnotationImageWithIdentifier:MGLDefaultStyleMarkerSymbolName];
+                        }
+                        if (image) {
+                            CGPoint point = [self convertCoordinate:annotation.coordinate toPointToView:self];
+                            point.y -= image.image.size.height/2.0f;
+                            calloutView.center = point;
+                        }
+                    }
+                }
                 continue;
             }
         }
