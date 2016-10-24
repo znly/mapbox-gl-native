@@ -76,7 +76,7 @@ extern MGLGeoJSONSourceOption const MGLGeoJSONToleranceOption;
  @param options An `NSDictionary` of options for this source.
  @return An initialized GeoJSON source.
  */
-- (instancetype)initWithIdentifier:(NSString *)identifier geoJSONData:(NSData *)data options:(nullable NS_DICTIONARY_OF(NSString *, id) *)options NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithIdentifier:(NSString *)identifier geoJSONData:(NSData *)data options:(nullable NS_DICTIONARY_OF(MGLGeoJSONSourceOption, id) *)options NS_DESIGNATED_INITIALIZER;
 
 /**
  Returns a GeoJSON source with an identifier, URL, and dictionary of options for
@@ -90,7 +90,7 @@ extern MGLGeoJSONSourceOption const MGLGeoJSONToleranceOption;
  @param options An `NSDictionary` of options for this source.
  @return An initialized GeoJSON source.
  */
-- (instancetype)initWithIdentifier:(NSString *)identifier URL:(NSURL *)url options:(nullable NS_DICTIONARY_OF(NSString *, id) *)options NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithIdentifier:(NSString *)identifier URL:(NSURL *)url options:(nullable NS_DICTIONARY_OF(MGLGeoJSONSourceOption, id) *)options NS_DESIGNATED_INITIALIZER;
 
 /**
  Returns a GeoJSON source with an identifier, features dictionary, and dictionary 
@@ -103,7 +103,7 @@ extern MGLGeoJSONSourceOption const MGLGeoJSONToleranceOption;
  @param options An `NSDictionary` of options for this source.
  @return An initialized GeoJSON source.
  */
-- (instancetype)initWithIdentifier:(NSString *)identifier features:(NSArray<id<MGLFeature>> *)features options:(nullable NS_DICTIONARY_OF(NSString *,id) *)options NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithIdentifier:(NSString *)identifier features:(NSArray<id<MGLFeature>> *)features options:(nullable NS_DICTIONARY_OF(MGLGeoJSONSourceOption,id) *)options NS_DESIGNATED_INITIALIZER;
 
 #pragma mark Accessing a Source’s Content
 
