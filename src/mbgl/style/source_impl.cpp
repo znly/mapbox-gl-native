@@ -195,8 +195,18 @@ LayerFeaturesHash Source::Impl::queryRenderedFeatures(const QueryParameters& par
 
     mapbox::geometry::box<double> box = mapbox::geometry::envelope(queryGeometry);
 
-    for (const auto& tilePtr : renderTiles) {
-        const RenderTile& renderTile = tilePtr.second;
+    std::vector<std::reference_wrapper<const RenderTile>> sortedTiles;
+    std::for_each(renderTiles.cbegin(), renderTiles.cend(),
+                  [&sortedTiles](const auto& pair) { sortedTiles.push_back(std::ref(pair.second)); });
+    std::sort(sortedTiles.begin(), sortedTiles.end(), [](const RenderTile& tileA, const RenderTile& tileB) {
+        return (tileA.id.canonical.z - tileB.id.canonical.z) ||
+               (tileA.id.canonical.y - tileB.id.canonical.y) ||
+               (tileA.id.wrap - tileB.id.wrap) ||
+               (tileA.id.canonical.x - tileB.id.canonical.x);
+    });
+
+    for (const auto& renderTileRef : sortedTiles) {
+        const RenderTile& renderTile = renderTileRef.get();
         GeometryCoordinate tileSpaceBoundsMin = TileCoordinate::toGeometryCoordinate(renderTile.id, box.min);
         if (tileSpaceBoundsMin.x >= util::EXTENT || tileSpaceBoundsMin.y >= util::EXTENT) {
             continue;
