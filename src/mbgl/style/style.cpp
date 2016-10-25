@@ -404,7 +404,7 @@ std::vector<Feature> Style::queryRenderedFeatures(const QueryParameters& paramet
     }
 
     std::vector<Feature> result;
-    std::unordered_map<std::string, std::vector<Feature>> resultsByLayer;
+    LayerFeaturesHash resultsByLayer;
 
     for (const auto& source : sources) {
         if (!sourceFilter.empty() && sourceFilter.find(source->getID()) == sourceFilter.end()) {

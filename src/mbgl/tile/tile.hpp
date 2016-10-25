@@ -51,7 +51,7 @@ public:
     virtual void redoLayout() {}
 
     virtual void queryRenderedFeatures(
-            std::unordered_map<std::string, std::vector<Feature>>& result,
+            LayerFeaturesHash& result,
             const GeometryCoordinates& queryGeometry,
             const TransformState&,
             const optional<std::vector<std::string>>& layerIDs);

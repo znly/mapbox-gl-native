@@ -180,8 +180,8 @@ void Source::Impl::reloadTiles() {
     }
 }
 
-std::unordered_map<std::string, std::vector<Feature>> Source::Impl::queryRenderedFeatures(const QueryParameters& parameters) const {
-    std::unordered_map<std::string, std::vector<Feature>> result;
+LayerFeaturesHash Source::Impl::queryRenderedFeatures(const QueryParameters& parameters) const {
+    LayerFeaturesHash result;
     if (renderTiles.empty() || parameters.geometry.empty()) {
         return result;
     }

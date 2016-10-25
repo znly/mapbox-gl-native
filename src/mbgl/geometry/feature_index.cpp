@@ -51,7 +51,7 @@ static bool topDownSymbols(const IndexedSubfeature& a, const IndexedSubfeature& 
 }
 
 void FeatureIndex::query(
-        std::unordered_map<std::string, std::vector<Feature>>& result,
+        LayerFeaturesHash& result,
         const GeometryCoordinates& queryGeometry,
         const float bearing,
         const double tileSize,
@@ -91,7 +91,7 @@ void FeatureIndex::query(
 }
 
 void FeatureIndex::addFeature(
-    std::unordered_map<std::string, std::vector<Feature>>& result,
+    LayerFeaturesHash& result,
     const IndexedSubfeature& indexedFeature,
     const GeometryCoordinates& queryGeometry,
     const optional<std::vector<std::string>>& filterLayerIDs,

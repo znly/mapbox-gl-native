@@ -34,7 +34,7 @@ public:
     void insert(const GeometryCollection&, std::size_t index, const std::string& sourceLayerName, const std::string& bucketName);
 
     void query(
-            std::unordered_map<std::string, std::vector<Feature>>& result,
+            LayerFeaturesHash& result,
             const GeometryCoordinates& queryGeometry,
             const float bearing,
             const double tileSize,
@@ -57,7 +57,7 @@ public:
 
 private:
     void addFeature(
-            std::unordered_map<std::string, std::vector<Feature>>& result,
+            LayerFeaturesHash& result,
             const IndexedSubfeature&,
             const GeometryCoordinates& queryGeometry,
             const optional<std::vector<std::string>>& filterLayerIDs,

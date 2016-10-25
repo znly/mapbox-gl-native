@@ -128,7 +128,7 @@ Bucket* GeometryTile::getBucket(const Layer& layer) {
 }
 
 void GeometryTile::queryRenderedFeatures(
-    std::unordered_map<std::string, std::vector<Feature>>& result,
+    LayerFeaturesHash& result,
     const GeometryCoordinates& queryGeometry,
     const TransformState& transformState,
     const optional<std::vector<std::string>>& layerIDs) {
