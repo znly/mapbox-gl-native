@@ -86,6 +86,13 @@ public:
     void renderRaster(PaintParameters&, RasterBucket&, const style::RasterLayer&, const RenderTile&);
     void renderBackground(PaintParameters&, const style::BackgroundLayer&);
 
+#ifndef NDEBUG
+    // Renders tile clip boundaries, using stencil buffer to calculate fill color.
+    void renderClipMasks(PaintParameters&);
+    // Renders the depth buffer.
+    void renderDepthBuffer(PaintParameters&);
+#endif
+
     float saturationFactor(float saturation);
     float contrastFactor(float contrast);
     std::array<float, 3> spinWeights(float spin_value);

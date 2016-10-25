@@ -172,6 +172,13 @@ void Painter::render(const Style& style, const FrameData& frame_, View& view, Sp
         }
     }
 
+#if not MBGL_USE_GLES2 and not defined(NDEBUG)
+    if (frame.debugOptions & MapDebugOptions::StencilClip) {
+        renderClipMasks(parameters);
+        return;
+    }
+#endif
+
     // Actually render the layers
     if (debug::renderTree) { Log::Info(Event::Render, "{"); indent++; }
 
@@ -207,6 +214,12 @@ void Painter::render(const Style& style, const FrameData& frame_, View& view, Sp
             source->baseImpl->finishRender(*this);
         }
     }
+
+#if not MBGL_USE_GLES2 and not defined(NDEBUG)
+    if (frame.debugOptions & MapDebugOptions::DepthBuffer) {
+        renderDepthBuffer(parameters);
+    }
+#endif
 
     // TODO: Find a better way to unbind VAOs after we're done with them without introducing
     // unnecessary bind(0)/bind(N) sequences.

@@ -114,6 +114,12 @@ public:
     State<value::Viewport> viewport;
     std::array<State<value::BindTexture>, 2> texture;
     State<value::BindVertexArray> vertexArrayObject;
+    State<value::Program> program;
+
+#if not MBGL_USE_GLES2
+    State<value::PixelZoom> pixelZoom;
+    State<value::RasterPos> rasterPos;
+#endif // MBGL_USE_GLES2
 
 private:
     State<value::StencilFunc> stencilFunc;
@@ -131,13 +137,10 @@ private:
     State<value::ClearDepth> clearDepth;
     State<value::ClearColor> clearColor;
     State<value::ClearStencil> clearStencil;
-    State<value::Program> program;
     State<value::LineWidth> lineWidth;
     State<value::BindRenderbuffer> bindRenderbuffer;
 #if not MBGL_USE_GLES2
     State<value::PointSize> pointSize;
-    State<value::PixelZoom> pixelZoom;
-    State<value::RasterPos> rasterPos;
 #endif // MBGL_USE_GLES2
     State<value::BindVertexBuffer> vertexBuffer;
     State<value::BindElementBuffer> elementBuffer;

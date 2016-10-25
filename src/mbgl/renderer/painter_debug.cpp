@@ -60,4 +60,77 @@ void Painter::renderTileDebug(const RenderTile& renderTile) {
     }
 }
 
+#ifndef NDEBUG
+void Painter::renderClipMasks(PaintParameters&) {
+    context.setStencil(gl::Stencil::disabled());
+    context.setDepth(gl::Depth::disabled());
+    context.setColor(gl::Color::unblended());
+    context.program = 0;
+
+#if not MBGL_USE_GLES2
+    context.pixelZoom = { 1, 1 };
+    context.rasterPos = { -1, -1, 0, 0 };
+
+    // Read the stencil buffer
+    const auto viewport = context.viewport.getCurrentValue();
+    auto pixels = std::make_unique<uint8_t[]>(viewport.width * viewport.height);
+    MBGL_CHECK_ERROR(glReadPixels(
+                viewport.x,         // GLint x
+                viewport.y,         // GLint y
+                viewport.width,   // GLsizei width
+                viewport.height,  // GLsizei height
+                GL_STENCIL_INDEX, // GLenum format
+                GL_UNSIGNED_BYTE, // GLenum type
+                pixels.get()      // GLvoid * data
+                ));
+
+    // Scale the Stencil buffer to cover the entire color space.
+    auto it = pixels.get();
+    auto end = it + viewport.width * viewport.height;
+    const auto factor = 255.0f / *std::max_element(it, end);
+    for (; it != end; ++it) {
+        *it *= factor;
+    }
+
+    MBGL_CHECK_ERROR(glWindowPos2i(viewport.x, viewport.y));
+    MBGL_CHECK_ERROR(glDrawPixels(viewport.width, viewport.height, GL_LUMINANCE, GL_UNSIGNED_BYTE,
+                                  pixels.get()));
+#endif // MBGL_USE_GLES2
+}
+
+void Painter::renderDepthBuffer(PaintParameters&) {
+    context.setStencil(gl::Stencil::disabled());
+    context.setDepth(gl::Depth::disabled());
+    context.setColor(gl::Color::unblended());
+    context.program = 0;
+
+#if not MBGL_USE_GLES2
+    context.pixelZoom = { 1, 1 };
+    context.rasterPos = { -1, -1, 0, 0 };
+
+    // Read the stencil buffer
+    const auto viewport = context.viewport.getCurrentValue();
+    auto pixels = std::make_unique<uint8_t[]>(viewport.width * viewport.height);
+
+    const double base = 1.0 / (1.0 - depthRangeSize);
+    glPixelTransferf(GL_DEPTH_SCALE, base);
+    glPixelTransferf(GL_DEPTH_BIAS, 1.0 - base);
+
+    MBGL_CHECK_ERROR(glReadPixels(
+                viewport.x,         // GLint x
+                viewport.y,         // GLint y
+                viewport.width,     // GLsizei width
+                viewport.height,    // GLsizei height
+                GL_DEPTH_COMPONENT, // GLenum format
+                GL_UNSIGNED_BYTE,   // GLenum type
+                pixels.get()        // GLvoid * data
+                ));
+
+    MBGL_CHECK_ERROR(glWindowPos2i(viewport.x, viewport.y));
+    MBGL_CHECK_ERROR(glDrawPixels(viewport.width, viewport.height, GL_LUMINANCE, GL_UNSIGNED_BYTE,
+                                  pixels.get()));
+#endif // MBGL_USE_GLES2
+}
+#endif // NDEBUG
+
 } // namespace mbgl
