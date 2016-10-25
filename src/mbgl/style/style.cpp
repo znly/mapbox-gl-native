@@ -404,18 +404,17 @@ std::vector<Feature> Style::queryRenderedFeatures(const QueryParameters& paramet
     }
 
     std::vector<Feature> result;
-    LayerFeaturesHash resultsByLayer;
+    std::unordered_map<std::string, LayerFeaturesHash> resultsBySourceLayer;
 
     for (const auto& source : sources) {
         if (!sourceFilter.empty() && sourceFilter.find(source->getID()) == sourceFilter.end()) {
             continue;
         }
 
-        auto sourceResults = source->baseImpl->queryRenderedFeatures(parameters);
-        std::move(sourceResults.begin(), sourceResults.end(), std::inserter(resultsByLayer, resultsByLayer.begin()));
+        resultsBySourceLayer.emplace(std::make_pair(source->getID(), source->baseImpl->queryRenderedFeatures(parameters)));
     }
 
-    if (resultsByLayer.empty()) {
+    if (resultsBySourceLayer.empty()) {
         return result;
     }
 
@@ -424,9 +423,14 @@ std::vector<Feature> Style::queryRenderedFeatures(const QueryParameters& paramet
         if (!layer->baseImpl->needsRendering(zoomHistory.lastZoom)) {
             continue;
         }
-        auto it = resultsByLayer.find(layer->baseImpl->id);
-        if (it != resultsByLayer.end()) {
-            std::move(it->second.begin(), it->second.end(), std::back_inserter(result));
+        for (const auto& source : sources) {
+            auto sourceIt = resultsBySourceLayer.find(source->getID());
+            if (sourceIt != resultsBySourceLayer.end()) {
+                auto layerIt = sourceIt->second.find(layer->getID());
+                if (layerIt != sourceIt->second.end()) {
+                    std::move(layerIt->second.begin(), layerIt->second.end(), std::back_inserter(result));
+                }
+            }
         }
     }
 
