@@ -15,9 +15,9 @@
     return self;
 }
 
-- (std::unique_ptr<mbgl::style::Source>)pendingSource
+- (std::unique_ptr<mbgl::style::Source> *)pendingSource
 {
-    return std::move(_pendingSource);
+    return &_pendingSource;
 }
 
 - (void)setPendingSource:(std::unique_ptr<mbgl::style::Source>)pendingSource

@@ -51,7 +51,7 @@ static NSString *MGLVectorSourceType   = @"vector";
                                                              self.tileSet.mbglTileset);
     }
     
-    self.pendingSource = std::move(source);
+    [self setPendingSource:std::move(source)];
 }
 
 @end

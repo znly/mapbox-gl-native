@@ -15,14 +15,16 @@
 @property (nonatomic) mbgl::style::Source *rawSource;
 
 /**
- A std::unique_ptr<>, which is present only for objects that were created 
- independently (not obtained by `mbgl::Map getSource`) and have not yet
- been added via `mbgl::Map addSource`. Once a source is added, ownership of the 
- object is transferred to the `mbgl::Map` and `pendingSource` is NULL. If the
- `MGLSource` object's mbgl source is in that state, the mbgl source can still be
- changed but the changes will not be visible until the `MGLSource` is added back
- via `-[MGLStyle addSource:]` and styled with an `MGLLayer`.
+ These methods offer access to a std::unique_ptr<>, which is present only for 
+ objects that were created independently (not obtained by `mbgl::Map getSource`) 
+ and have not yet been added via `mbgl::Map addSource`. Once a source is added, 
+ ownership of the object is transferred to the `mbgl::Map` and `pendingSource` 
+ is NULL. If the `MGLSource` object's mbgl source is in that state, the mbgl 
+ source can still be changed but the changes will not be visible until the 
+ `MGLSource` is added back via `-[MGLStyle addSource:]` and styled with an 
+ `MGLLayer`.
  */
-@property (nonatomic) std::unique_ptr<mbgl::style::Source> pendingSource;
+- (std::unique_ptr<mbgl::style::Source> *)pendingSource;
+- (void)setPendingSource:(std::unique_ptr<mbgl::style::Source>)pendingSource;
 
 @end

@@ -51,8 +51,8 @@
                                                              self.tileSet.mbglTileset,
                                                              uint16_t(self.tileSize));
     }
-    
-    self.pendingSource = std::move(source);
+        
+    [self setPendingSource:std::move(source)];
 }
 
 @end
