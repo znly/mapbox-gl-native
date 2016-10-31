@@ -86,6 +86,13 @@ typedef NS_ENUM(NSUInteger, MGLAnnotationViewDragState) {
  Called when the view go into the reuse queue.
  */
 - (void)willBeEnqueued;
+
+/**
+ Called when the zoom level changed, normalized
+ */
+- (void)zoomLevelChanged:(double)zoomLevel;
+
+/**
  The annotation object currently associated with the view.
  
  You should not change the value of this property directly. This property

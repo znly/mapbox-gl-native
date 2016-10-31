@@ -41,6 +41,11 @@
 -(void)willBeEnqueued {
     
 }
+
+-(void)zoomLevelChanged:(double)zoomLevel {
+    
+}
+
 - (void)setCenterOffset:(CGVector)centerOffset
 {
     _centerOffset = centerOffset;

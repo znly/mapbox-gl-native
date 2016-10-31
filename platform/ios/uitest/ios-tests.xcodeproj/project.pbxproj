@@ -284,7 +284,11 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
+					DD043322196DB9BC00E6F39D = {
+						DevelopmentTeam = H38Z759243;
+					};
 					DDBD0151196DC3D70033959E = {
+						DevelopmentTeam = H38Z759243;
 						TestTargetID = DD043322196DB9BC00E6F39D;
 					};
 				};
@@ -445,6 +449,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = H38Z759243;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/App-Info.plist";
@@ -463,6 +468,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = H38Z759243;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "$(SRCROOT)/App-Info.plist";
@@ -480,6 +486,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Mapbox GL Tests.app/Mapbox GL Tests";
+				DEVELOPMENT_TEAM = H38Z759243;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -513,6 +520,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Mapbox GL Tests.app/Mapbox GL Tests";
+				DEVELOPMENT_TEAM = H38Z759243;
 				GCC_PREPROCESSOR_DEFINITIONS = "KIF_XCTEST=1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

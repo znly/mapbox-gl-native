@@ -519,8 +519,8 @@ typedef NS_ENUM(NSInteger, MBXSettingsMiscellaneousRows) {
 
             for (NSDictionary *feature in features[@"features"])
             {
-                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([feature[@"geometry"][@"coordinates"][1] doubleValue],
-                                                                               [feature[@"geometry"][@"coordinates"][0] doubleValue]);
+                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(49.082393,
+                                                                               5.784256);
                 NSString *title = feature[@"properties"][@"NAME"];
 
                 MGLPointAnnotation *annotation = (useViews ? [MGLPointAnnotation new] : [MBXSpriteBackedAnnotation new]);

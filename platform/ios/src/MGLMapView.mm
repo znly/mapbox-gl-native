@@ -263,6 +263,7 @@ public:
 
     BOOL _opaque;
 
+    double _lastZoom;
     NS_MUTABLE_ARRAY_OF(NSURL *) *_bundledStyleURLs;
 
     MGLAnnotationContextMap _annotationContextsByAnnotationTag;
@@ -370,6 +371,7 @@ public:
 
     _isTargetingInterfaceBuilder = NSProcessInfo.processInfo.mgl_isInterfaceBuilderDesignablesAgent;
     _opaque = YES;
+    _lastZoom = -1;
 
     BOOL background = [UIApplication sharedApplication].applicationState == UIApplicationStateBackground;
     if (!background)
@@ -4598,7 +4600,12 @@ public:
     {
         return;
     }
-    
+
+    double zoom = (_mbglMap->getZoom() - _mbglMap->getMinZoom()) / (_mbglMap->getMaxZoom() - _mbglMap->getMinZoom());
+    BOOL zoomChanged = _lastZoom != zoom;
+    _lastZoom = zoom;
+
+
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
 
@@ -4625,10 +4632,14 @@ public:
                 MGLAnnotationView *annotationView = [self annotationViewForAnnotation:annotationContext.annotation];
                 annotationView.mapView = self;
                 annotationContext.annotationView = annotationView;
+                [annotationView zoomLevelChanged:_lastZoom];
 
                 if (!annotationView.superview) {
                     [self.annotationContainerView insertSubview:annotationView atIndex:0];
                 }
+            }
+            else if (zoomChanged) {
+                [annotationView zoomLevelChanged:_lastZoom];
             }
             annotationView.center = [self convertCoordinate:annotationContext.annotation.coordinate toPointToView:self];
 
@@ -4652,11 +4663,8 @@ public:
     if (annotationContext.viewReuseIdentifier)
     {
         NSMutableSet *annotationViewReuseQueue = [self annotationViewReuseQueueForIdentifier:annotationContext.viewReuseIdentifier];
-        if (![annotationViewReuseQueue containsObject:annotationView])
-        {
-            [annotationViewReuseQueue addObject:annotationView];
-            annotationContext.annotationView = nil;
-        }
+        [annotationViewReuseQueue addObject:annotationView];
+        annotationContext.annotationView = nil;
     }
 }
 
