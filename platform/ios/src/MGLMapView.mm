@@ -130,6 +130,7 @@ enum { MGLAnnotationTagNotFound = UINT32_MAX };
 /// Mapping from an annotation tag to metadata about that annotation, including
 /// the annotation itself.
 typedef std::map<MGLAnnotationTag, MGLAnnotationContext> MGLAnnotationContextMap;
+typedef std::map<id<MGLAnnotation>, MGLAnnotationTag> MGLAnnotationMap;
 
 /// Initializes the run loop shim that lives on the main thread.
 void MGLinitializeRunLoop() {
@@ -269,6 +270,7 @@ public:
     NS_MUTABLE_ARRAY_OF(NSURL *) *_bundledStyleURLs;
 
     MGLAnnotationContextMap _annotationContextsByAnnotationTag;
+    MGLAnnotationMap    _annotationContextByAnnotation;
     /// Tag of the selected annotation. If the user location annotation is selected, this ivar is set to `MGLAnnotationTagNotFound`.
     MGLAnnotationTag _selectedAnnotationTag;
     NS_MUTABLE_DICTIONARY_OF(NSString *, NS_MUTABLE_SET_OF(MGLAnnotationView *) *) *_annotationViewReuseQueueByIdentifier;
@@ -430,6 +432,7 @@ public:
     // Set up annotation management and selection state.
     _annotationImagesByIdentifier = [NSMutableDictionary dictionary];
     _annotationContextsByAnnotationTag = {};
+    _annotationContextByAnnotation = {};
     _annotationViewReuseQueueByIdentifier = [NSMutableDictionary dictionary];
     _selectedAnnotationTag = MGLAnnotationTagNotFound;
     _annotationsNearbyLastTap = {};
@@ -2826,20 +2829,51 @@ public:
 }
 
 /// Returns the annotation tag assigned to the given annotation. Relatively expensive.
+//- (MGLAnnotationTag)annotationContextForAnnotation:(id <MGLAnnotation>)annotation
+//{
+//    if ( ! annotation || annotation == self.userLocation)
+//    {
+//        return MGLAnnotationTagNotFound;
+//    }
+//
+//    auto it = _annotationContextByAnnotation.find(annotation);
+//
+//    if (it != _annotationContextByAnnotation.end()) {
+//        return it->second;
+//    }
+//
+//    return MGLAnnotationTagNotFound;
+//}
+
+/// Returns the annotation tag assigned to the given annotation. Relatively expensive.
 - (MGLAnnotationTag)annotationTagForAnnotation:(id <MGLAnnotation>)annotation
 {
+//    if ( ! annotation || annotation == self.userLocation)
+//    {
+//        return MGLAnnotationTagNotFound;
+//    }
+//
+//
+//    for (auto &pair : _annotationContextsByAnnotationTag)
+//    {
+//        if (pair.second.annotation == annotation)
+//        {
+//            return pair.first;
+//        }
+//    }
+//    return MGLAnnotationTagNotFound;
+
     if ( ! annotation || annotation == self.userLocation)
     {
         return MGLAnnotationTagNotFound;
     }
 
-    for (auto &pair : _annotationContextsByAnnotationTag)
-    {
-        if (pair.second.annotation == annotation)
-        {
-            return pair.first;
-        }
+    auto it = _annotationContextByAnnotation.find(annotation);
+
+    if (it != _annotationContextByAnnotation.end()) {
+        return it->second;
     }
+
     return MGLAnnotationTagNotFound;
 }
 
@@ -2889,7 +2923,7 @@ public:
             MGLAnnotationContext context;
             context.annotation = annotation;
             _annotationContextsByAnnotationTag[annotationTag] = context;
-
+            _annotationContextByAnnotation[annotation] = annotationTag;
             [(NSObject *)annotation addObserver:self forKeyPath:@"coordinates" options:0 context:(void *)(NSUInteger)annotationTag];
         }
         else if ( ! [annotation isKindOfClass:[MGLMultiPolyline class]]
@@ -2967,7 +3001,7 @@ public:
             }
 
             _annotationContextsByAnnotationTag[annotationTag] = context;
-
+            _annotationContextByAnnotation[annotation] = annotationTag;
             if ([annotation isKindOfClass:[NSObject class]]) {
                 NSAssert(![annotation isKindOfClass:[MGLMultiPoint class]], @"Point annotation should not be MGLMultiPoint.");
                 [(NSObject *)annotation addObserver:self forKeyPath:@"coordinate" options:0 context:(void *)(NSUInteger)annotationTag];
@@ -3117,6 +3151,19 @@ public:
     return 3.0;
 }
 
+- (nullable MGLAnnotationView*)existingAnnotationViewForAnnotation:(id<MGLAnnotation>)annotation {
+
+    auto it = _annotationContextByAnnotation.find(annotation);
+
+    if (it != _annotationContextByAnnotation.end()) {
+        MGLAnnotationTag tag = it->second;
+
+        return _annotationContextsByAnnotationTag[tag].annotationView;
+    }
+
+    return nil;
+}
+
 - (void)installAnnotationImage:(MGLAnnotationImage *)annotationImage
 {
     NSString *iconIdentifier = annotationImage.styleIconIdentifier;
@@ -3157,13 +3204,12 @@ public:
     {
         NSAssert([annotation conformsToProtocol:@protocol(MGLAnnotation)], @"annotation should conform to MGLAnnotation");
 
-        MGLAnnotationTag annotationTag = [self annotationTagForAnnotation:annotation];
+        MGLAnnotationTag annotationTag  = [self annotationTagForAnnotation:annotation];
         if (annotationTag == MGLAnnotationTagNotFound)
         {
             continue;
         }
-
-        MGLAnnotationContext &annotationContext = _annotationContextsByAnnotationTag.at(annotationTag);
+        MGLAnnotationContext &annotationContext = _annotationContextsByAnnotationTag[annotationTag];
         MGLAnnotationView *annotationView = annotationContext.annotationView;
         annotationView.annotation = nil;
         [annotationView removeFromSuperview];
@@ -3174,7 +3220,7 @@ public:
         }
 
         _annotationContextsByAnnotationTag.erase(annotationTag);
-
+        _annotationContextByAnnotation.erase(annotation);
         if ([annotation isKindOfClass:[NSObject class]] && ![annotation isKindOfClass:[MGLMultiPoint class]])
         {
             [(NSObject *)annotation removeObserver:self forKeyPath:@"coordinate" context:(void *)(NSUInteger)annotationTag];
@@ -4601,6 +4647,7 @@ public:
 - (void)updateAnnotationViews
 {
     BOOL delegateImplementsViewForAnnotation = [self.delegate respondsToSelector:@selector(mapView:viewForAnnotation:)];
+    BOOL delegateImplementsUpdateAnnotationViews = [self.delegate respondsToSelector:@selector(mapView:updateAnnotationView:forAnnotation:)];
 
     if (!delegateImplementsViewForAnnotation)
     {
@@ -4608,7 +4655,6 @@ public:
     }
 
     double zoom = (_mbglMap->getZoom() - _mbglMap->getMinZoom()) / (_mbglMap->getMaxZoom() - _mbglMap->getMinZoom());
-    BOOL zoomChanged = _lastZoom != zoom;
     _lastZoom = zoom;
 
 
@@ -4638,14 +4684,14 @@ public:
                 MGLAnnotationView *annotationView = [self annotationViewForAnnotation:annotationContext.annotation];
                 annotationView.mapView = self;
                 annotationContext.annotationView = annotationView;
-                [annotationView zoomLevelChanged:_lastZoom];
+
+                if (delegateImplementsUpdateAnnotationViews) {
+                    [self.delegate mapView:self updateAnnotationView:annotationView forAnnotation:annotationContext.annotation];
+                }
 
                 if (!annotationView.superview) {
                     [self.annotationContainerView insertSubview:annotationView atIndex:0];
                 }
-            }
-            else if (zoomChanged) {
-                [annotationView zoomLevelChanged:_lastZoom];
             }
             annotationView.center = [self convertCoordinate:annotationContext.annotation.coordinate toPointToView:self];
 

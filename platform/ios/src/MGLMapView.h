@@ -884,6 +884,12 @@ IB_DESIGNABLE
 #pragma mark Annotating the Map
 
 /**
+**  The corresponding annotationView, if it exists
+**/
+- (nullable MGLAnnotationView*)existingAnnotationViewForAnnotation:(id<MGLAnnotation>)annotation;
+
+
+/**
  The complete list of annotations associated with the receiver. (read-only)
  
  The objects in this array must adopt the `MGLAnnotation` protocol. If no

@@ -42,9 +42,6 @@
     
 }
 
--(void)zoomLevelChanged:(double)zoomLevel {
-    
-}
 
 - (void)setCenterOffset:(CGVector)centerOffset
 {

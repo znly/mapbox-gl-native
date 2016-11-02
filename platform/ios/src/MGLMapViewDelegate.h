@@ -315,6 +315,14 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark Selecting Annotations
 
 /**
+ Gives a change to the delegate to update the MGLAnnotationView property
+ 
+ You can use this method to update the scale based on the zoom for example
+ */
+- (void)mapView:(MGLMapView *)mapView updateAnnotationView:(MGLAnnotationView*)annotationView forAnnotation:(id<MGLAnnotation>)annotation;
+
+
+/**
  Tells the delegate that one of its annotations was selected.
  
  You can use this method to track changes in the selection state of annotations.
