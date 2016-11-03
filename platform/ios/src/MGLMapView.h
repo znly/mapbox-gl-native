@@ -458,6 +458,7 @@ IB_DESIGNABLE
  */
 - (void)setCenterCoordinate:(CLLocationCoordinate2D)centerCoordinate zoomLevel:(double)zoomLevel direction:(CLLocationDirection)direction animated:(BOOL)animated completionHandler:(nullable void (^)(void))completion;
 
+
 /** The zoom level of the receiver.
  
  In addition to affecting the visual size and detail of features on the map,
@@ -470,6 +471,14 @@ IB_DESIGNABLE
  want to animate the change, use the `-setZoomLevel:animated:` method instead.
  */
 @property (nonatomic) double zoomLevel;
+
+/** The Normalized zoom level
+
+    Same as zoomLevel, but normalized in [0, 1]
+
+*/
+@property (nonatomic) double normalizedZoomLevel;
+
 
 /**
  Changes the zoom level of the map and optionally animates the change.

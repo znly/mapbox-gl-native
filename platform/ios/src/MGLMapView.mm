@@ -266,7 +266,6 @@ public:
 
     BOOL _opaque;
 
-    double _lastZoom;
     NS_MUTABLE_ARRAY_OF(NSURL *) *_bundledStyleURLs;
 
     MGLAnnotationContextMap _annotationContextsByAnnotationTag;
@@ -2280,6 +2279,10 @@ public:
 + (NS_SET_OF(NSString *) *)keyPathsForValuesAffectingZoomLevel
 {
     return [NSSet setWithObject:@"camera"];
+}
+
+- (double)normalizedZoomLevel {
+    return (_mbglMap->getZoom() - _mbglMap->getMinZoom()) / (_mbglMap->getMaxZoom() - _mbglMap->getMinZoom());
 }
 
 - (double)zoomLevel
@@ -4649,13 +4652,11 @@ public:
     BOOL delegateImplementsViewForAnnotation = [self.delegate respondsToSelector:@selector(mapView:viewForAnnotation:)];
     BOOL delegateImplementsUpdateAnnotationViews = [self.delegate respondsToSelector:@selector(mapView:updateAnnotationView:forAnnotation:)];
 
-    if (!delegateImplementsViewForAnnotation)
+    if (!delegateImplementsViewForAnnotation || ! delegateImplementsUpdateAnnotationViews)
     {
         return;
     }
 
-    double zoom = (_mbglMap->getZoom() - _mbglMap->getMinZoom()) / (_mbglMap->getMaxZoom() - _mbglMap->getMinZoom());
-    _lastZoom = zoom;
 
 
     [CATransaction begin];
@@ -4685,14 +4686,12 @@ public:
                 annotationView.mapView = self;
                 annotationContext.annotationView = annotationView;
 
-                if (delegateImplementsUpdateAnnotationViews) {
-                    [self.delegate mapView:self updateAnnotationView:annotationView forAnnotation:annotationContext.annotation];
-                }
 
                 if (!annotationView.superview) {
                     [self.annotationContainerView insertSubview:annotationView atIndex:0];
                 }
             }
+            [self.delegate mapView:self updateAnnotationView:annotationView forAnnotation:annotationContext.annotation];
             annotationView.center = [self convertCoordinate:annotationContext.annotation.coordinate toPointToView:self];
 
         } else {
