@@ -519,8 +519,8 @@ typedef NS_ENUM(NSInteger, MBXSettingsMiscellaneousRows) {
 
             for (NSDictionary *feature in features[@"features"])
             {
-                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(49.082393,
-                                                                               5.784256);
+                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([feature[@"geometry"][@"coordinates"][1] doubleValue],
+                                                                               [feature[@"geometry"][@"coordinates"][0] doubleValue]);
                 NSString *title = feature[@"properties"][@"NAME"];
 
                 MGLPointAnnotation *annotation = (useViews ? [MGLPointAnnotation new] : [MBXSpriteBackedAnnotation new]);
@@ -1010,6 +1010,10 @@ typedef NS_ENUM(NSInteger, MBXSettingsMiscellaneousRows) {
 }
 
 #pragma mark - Map Delegate
+
+-(void)mapView:(MGLMapView *)mapView updateAnnotationView:(MGLAnnotationView *)annotationView forAnnotation:(id<MGLAnnotation>)annotation {
+
+}
 
 - (MGLAnnotationView *)mapView:(MGLMapView *)mapView viewForAnnotation:(id<MGLAnnotation>)annotation
 {

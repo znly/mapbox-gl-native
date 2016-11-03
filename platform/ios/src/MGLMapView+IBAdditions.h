@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) IBInspectable double longitude;
 @property (nonatomic) IBInspectable double zoomLevel;
 
+
 // Renamed properties. Interface Builder derives the display name of each
 // inspectable from the runtime name, but runtime names don’t always make sense
 // in UI.

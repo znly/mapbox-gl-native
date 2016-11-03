@@ -374,7 +374,6 @@ public:
 
     _isTargetingInterfaceBuilder = NSProcessInfo.processInfo.mgl_isInterfaceBuilderDesignablesAgent;
     _opaque = YES;
-    _lastZoom = -1;
 
     BOOL background = [UIApplication sharedApplication].applicationState == UIApplicationStateBackground;
     if (!background)
@@ -4652,10 +4651,10 @@ public:
     BOOL delegateImplementsViewForAnnotation = [self.delegate respondsToSelector:@selector(mapView:viewForAnnotation:)];
     BOOL delegateImplementsUpdateAnnotationViews = [self.delegate respondsToSelector:@selector(mapView:updateAnnotationView:forAnnotation:)];
 
-    if (!delegateImplementsViewForAnnotation || ! delegateImplementsUpdateAnnotationViews)
-    {
-        return;
-    }
+//    if (!delegateImplementsViewForAnnotation || !delegateImplementsUpdateAnnotationViews)
+//    {
+//        return;
+//    }
 
 
 
@@ -4714,8 +4713,9 @@ public:
     if (annotationContext.viewReuseIdentifier)
     {
         NSMutableSet *annotationViewReuseQueue = [self annotationViewReuseQueueForIdentifier:annotationContext.viewReuseIdentifier];
-        [annotationViewReuseQueue addObject:annotationView];
         annotationContext.annotationView = nil;
+        [annotationViewReuseQueue addObject:annotationView];
+
     }
 }
 
