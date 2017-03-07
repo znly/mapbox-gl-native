@@ -241,8 +241,8 @@ void Transform::flyTo(const CameraOptions &camera, const AnimationOptions &anima
         return std::log(std::sqrt(b * b + 1) - b);
     };
 
-    // When u₀ = u₁, the optimal path doesn’t require both ascent and descent.
-    bool isClose = std::abs(u1) < 0.000001;
+    // When u₀ = u₁ or zoom out factor = inf, the optimal path doesn’t require both ascent and descent.
+    bool isClose = std::abs(u1) < 0.000001 || isinf(r(0));
     // Perform a more or less instantaneous transition if the path is too short.
     if (isClose && std::abs(w0 - w1) < 0.000001) {
         easeTo(camera, animation);
